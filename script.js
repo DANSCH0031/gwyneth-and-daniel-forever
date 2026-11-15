@@ -348,3 +348,71 @@ function launchConfetti() {
   };
   requestAnimationFrame(frame);
 }
+
+/* ---------- Contact form (delivered by Web3Forms, no email app needed) ---------- */
+// Get a free key at https://web3forms.com (enter the email that should receive messages)
+const WEB3FORMS_KEY = '953f0acf-cddf-441f-bbb8-ea6f18e15641';
+const contactForm = document.querySelector('[data-contact]');
+
+if (contactForm) {
+  const status = contactForm.querySelector('[data-contact-status]');
+  const submit = contactForm.querySelector('.contact-submit');
+  const fields = {
+    name: contactForm.querySelector('#contact-name'),
+    email: contactForm.querySelector('#contact-email'),
+    message: contactForm.querySelector('#contact-message'),
+  };
+
+  Object.values(fields).forEach((input) => {
+    input.addEventListener('input', () => input.closest('.field').classList.remove('has-error'));
+  });
+
+  contactForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    status.className = 'contact-status';
+    status.textContent = '';
+
+    const checks = {
+      name: fields.name.value.trim() !== '',
+      email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fields.email.value.trim()),
+      message: fields.message.value.trim() !== '',
+    };
+    Object.entries(checks).forEach(([key, ok]) => fields[key].closest('.field').classList.toggle('has-error', !ok));
+    const firstBad = Object.keys(checks).find((key) => !checks[key]);
+    if (firstBad) {
+      fields[firstBad].focus();
+      return;
+    }
+
+    submit.disabled = true;
+    submit.textContent = 'Sending…';
+
+    try {
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          access_key: WEB3FORMS_KEY,
+          subject: `Wedding website message from ${fields.name.value.trim()}`,
+          from_name: 'G&D wedding website',
+          name: fields.name.value.trim(),
+          email: fields.email.value.trim(),
+          message: fields.message.value.trim(),
+          botcheck: contactForm.querySelector('[name="botcheck"]').checked,
+        }),
+      });
+      const result = await response.json();
+      if (!result.success) throw new Error(result.message || 'Send failed');
+
+      contactForm.reset();
+      status.classList.add('is-success');
+      status.textContent = 'Thank you! Your message is on its way to us ♥';
+    } catch (error) {
+      status.classList.add('is-error');
+      status.textContent = 'Sorry, something went wrong. Please try again in a moment.';
+    } finally {
+      submit.disabled = false;
+      submit.textContent = 'Send message';
+    }
+  });
+}
