@@ -155,7 +155,6 @@
   will-change: transform;
 }
 .v-fly .pano-canvas {
-  width: 100%;
   height: 100%;
   aspect-ratio: auto;
 }
@@ -274,11 +273,16 @@
   padding-bottom: calc(min(100vw, 1800px) * 0.2625 * 0.7);
   will-change: opacity, transform;
 }
+@media (max-width: 640px) {
+  .v-curtain .curtain-content {
+    padding-bottom: calc(100vw * 560 / 600 * 0.7);
+  }
+}
 .v-curtain .curtain-pano {
   position: absolute;
   left: 50%;
   bottom: 0;
-  width: max(100%, 760px);
+  width: 100%;
   transform: translateX(-50%);
 }
 .v-curtain .pano-canvas {

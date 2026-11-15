@@ -329,11 +329,24 @@ body.page-open .landing {
   display: none;
 }
 
-/* Always drawn at its true proportions (1600 × 420) */
+/* Always drawn at its true proportions: wide (1600 × 420) on tablets and laptops,
+   upright (600 × 560) on phones so all five peaks fit without squeezing */
 .pano-canvas {
   position: relative;
-  width: max(100%, calc(var(--pano-min-h) * 1600 / 420));
+  width: 100%;
   aspect-ratio: 1600 / 420;
+}
+.pano-canvas--portrait {
+  display: none;
+  aspect-ratio: 600 / 560;
+}
+@media (max-width: 640px) {
+  .pano-canvas {
+    display: none;
+  }
+  .pano-canvas--portrait {
+    display: block;
+  }
 }
 
 .pano-layer,
@@ -1528,5 +1541,25 @@ body.page-open .landing {
   .js .reveal {
     opacity: 1;
     transform: none;
+  }
+}
+
+/* Short phones (e.g. iPhone SE): tighten the opening text so the whole range stays on screen */
+@media (max-width: 640px) and (max-height: 760px) {
+  .landing-content {
+    padding-top: calc(16px + env(safe-area-inset-top));
+  }
+  .landing-title {
+    margin: 8px 0 6px;
+    font-size: 2.6rem;
+  }
+  .countdown {
+    margin: 12px 0 10px;
+  }
+  .countdown-unit {
+    padding: 7px 4px 6px;
+  }
+  .landing-hint::after {
+    display: none;
   }
 }

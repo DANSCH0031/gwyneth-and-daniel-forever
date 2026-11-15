@@ -4,20 +4,27 @@
    ========================================================= */
 (() => {
   const pano = document.querySelector('[data-fly-pano]');
-  const peaks = Array.from(pano.querySelectorAll('.peak'));
+  const canvases = Array.from(pano.querySelectorAll('.pano-canvas'));
   const gaps = Array.from(document.querySelectorAll('[data-fly-target]'));
   const introContent = document.querySelector('.fly-intro .landing-content');
-  // summit positions in the 1600 × 420 drawing
-  const SUMMITS = [[270, 205], [545, 135], [800, 62], [1065, 145], [1335, 210]];
 
-  let vw, vh, cw, ch, zoom;
+  // Phones show the upright drawing, laptops/tablets the wide one
+  let canvas, peaks, summits, vw, vh, cw, ch, zoom;
 
   function measure() {
     vw = window.innerWidth;
     vh = window.innerHeight;
-    cw = Math.max(vw, 720);
-    ch = cw * 420 / 1600;
-    zoom = vw < 700 ? 1.6 : 2.1;
+    canvas = canvases.find((c) => getComputedStyle(c).display !== 'none') || canvases[0];
+    const portrait = canvas.classList.contains('pano-canvas--portrait');
+    cw = vw;
+    ch = portrait ? vw * 560 / 600 : vw * 420 / 1600;
+    zoom = portrait ? 1.7 : 2.1;
+    peaks = Array.from(canvas.querySelectorAll('.peak'));
+    // each peak's summit, read from its flag position (--x from the left, --y from the bottom)
+    summits = peaks.map((peak) => [
+      parseFloat(peak.style.getPropertyValue('--x')) / 100,
+      1 - parseFloat(peak.style.getPropertyValue('--y')) / 100,
+    ]);
     pano.style.setProperty('--cw', `${cw}px`);
     pano.style.setProperty('--ch', `${ch}px`);
     document.documentElement.style.setProperty('--ch', `${ch}px`);
@@ -31,13 +38,13 @@
   }
 
   function overview() {
-    return clampState(1, (vw - cw) / 2, 0);
+    return { s: 1, tx: 0, ty: 0 };
   }
 
   function peakState(i) {
     const s = zoom;
-    const px = SUMMITS[i][0] / 1600 * cw;
-    const py = SUMMITS[i][1] / 420 * ch;
+    const px = summits[i][0] * cw;
+    const py = summits[i][1] * ch;
     const tx = vw / 2 - s * px;
     const ty = vh * 0.42 - (vh - ch) - s * py;
     return clampState(s, tx, ty);
