@@ -1,6 +1,7 @@
 /* =========================================================
    Gwyneth & Daniel — wedding site
-   The landing page is an Alpine panorama: each peak opens a page.
+   An Alpine panorama: scrolling flies across it peak by peak,
+   and each section rises up out of the mountains.
    Colours from the venue photos: sunset gold + lake turquoise.
    ========================================================= */
 
@@ -28,10 +29,7 @@
 
   --gutter: clamp(16px, 5vw, 40px);
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
-  --page-speed: 0.75s;
 
-  /* The panorama never gets shorter than this; on narrow screens it scrolls sideways instead of squeezing */
-  --pano-min-h: 240px;
 }
 
 *,
@@ -53,9 +51,6 @@ body {
   background: var(--ink);
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
-}
-body.page-open {
-  overflow: hidden;
 }
 
 img {
@@ -170,11 +165,6 @@ p {
   isolation: isolate;
   background: var(--ink);
   transform-origin: 50% 100%;
-  transition: transform var(--page-speed) var(--ease-out), filter var(--page-speed) var(--ease-out);
-}
-body.page-open .landing {
-  transform: scale(0.94);
-  filter: brightness(0.5);
 }
 
 .landing-media {
@@ -296,13 +286,6 @@ body.page-open .landing {
   background: linear-gradient(rgba(255, 255, 255, 0.8), transparent);
   animation: hint-drop 2s ease-in-out infinite;
 }
-.hint-touch {
-  display: none;
-}
-@media (hover: none) {
-  .hint-desktop { display: none; }
-  .hint-touch { display: inline; }
-}
 
 /* Staggered entrance for the landing text */
 .in {
@@ -311,42 +294,17 @@ body.page-open .landing {
 }
 
 /* =========================================================
-   PANORAMA (the menu)
+   PANORAMA
    ========================================================= */
 .panorama {
   position: relative;
   flex: none;
 }
-.pano-scroller {
-  overflow-x: auto;
-  overflow-y: hidden;
-  scroll-snap-type: x mandatory;
-  overscroll-behavior-x: contain;
-  scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
-}
-.pano-scroller::-webkit-scrollbar {
-  display: none;
-}
-
-/* Always drawn at its true proportions: wide (1600 × 420) on tablets and laptops,
-   upright (600 × 560) on phones so all five peaks fit without squeezing */
+/* Always drawn at its true proportions (1600 × 420) */
 .pano-canvas {
   position: relative;
   width: 100%;
   aspect-ratio: 1600 / 420;
-}
-.pano-canvas--portrait {
-  display: none;
-  aspect-ratio: 600 / 560;
-}
-@media (max-width: 640px) {
-  .pano-canvas {
-    display: none;
-  }
-  .pano-canvas--portrait {
-    display: block;
-  }
 }
 
 .pano-layer,
@@ -505,50 +463,6 @@ body.page-open .landing {
 .shimmer path:nth-child(2n) { animation-delay: -1.7s; }
 .shimmer path:nth-child(3n) { animation-delay: -3.1s; }
 
-.pano-snap {
-  position: absolute;
-  top: 0;
-  width: 1px;
-  height: 1px;
-  scroll-snap-align: center;
-}
-
-/* Position dots — only shown when the panorama is wider than the screen */
-.pano-dots {
-  position: absolute;
-  left: 50%;
-  bottom: calc(10px + env(safe-area-inset-bottom));
-  display: none;
-  gap: 4px;
-  transform: translateX(-50%);
-}
-.panorama.is-scrollable .pano-dots {
-  display: flex;
-}
-.pano-dots button {
-  width: 24px;
-  height: 24px;
-  padding: 0;
-  border: 0;
-  background: none;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
-.pano-dots button::before {
-  content: "";
-  display: block;
-  width: 7px;
-  height: 7px;
-  margin: auto;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.45);
-  transition: background 0.3s, transform 0.3s var(--ease-out);
-}
-.pano-dots button.is-active::before {
-  background: #fff;
-  transform: scale(1.35);
-}
-
 @media (max-width: 480px) {
   .peak-pill {
     padding: 6px 11px;
@@ -557,33 +471,29 @@ body.page-open .landing {
 }
 
 /* =========================================================
-   PAGES (slide up over the mountains)
+   SECTIONS (rise up out of the mountains after each peak)
    ========================================================= */
-.page {
-  position: fixed;
-  inset: 0;
-  z-index: 40;
+.sheet {
+  position: relative;
+  z-index: 2;
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  -webkit-overflow-scrolling: touch;
   background: var(--cream);
   color: var(--ink);
-  transform: translateY(100%);
-  visibility: hidden;
-  box-shadow: 0 -30px 60px rgba(0, 0, 0, 0.25);
-  transition: transform var(--page-speed) var(--ease-out), visibility 0s var(--page-speed);
 }
-.page.is-open {
-  transform: none;
-  visibility: visible;
-  transition: transform var(--page-speed) var(--ease-out), visibility 0s;
+/* mountain-ridge top edge in the section's own colour */
+.sheet::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -59px;
+  height: 60px;
+  background: inherit;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60' preserveAspectRatio='none'%3E%3Cpath d='M0 60 L0 38 L110 18 L210 40 L330 6 L450 36 L560 16 L690 44 L800 8 L920 34 L1040 14 L1160 40 L1290 12 L1440 32 L1440 60 Z'/%3E%3C/svg%3E") bottom / 100% 100% no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60' preserveAspectRatio='none'%3E%3Cpath d='M0 60 L0 38 L110 18 L210 40 L330 6 L450 36 L560 16 L690 44 L800 8 L920 34 L1040 14 L1160 40 L1290 12 L1440 32 L1440 60 Z'/%3E%3C/svg%3E") bottom / 100% 100% no-repeat;
+  pointer-events: none;
 }
-.page.no-anim {
-  transition: none;
-}
-
 .page--dark {
   color: #fff;
   background:
@@ -601,73 +511,6 @@ body.page-open .landing {
   background: var(--sand);
 }
 
-.page-bar {
-  position: sticky;
-  top: 0;
-  z-index: 5;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: calc(10px + env(safe-area-inset-top)) var(--gutter) 10px;
-  background: rgba(248, 243, 236, 0.86);
-  backdrop-filter: blur(16px) saturate(1.4);
-  -webkit-backdrop-filter: blur(16px) saturate(1.4);
-  border-bottom: 1px solid var(--line);
-}
-.page--tint .page-bar {
-  background: rgba(239, 229, 214, 0.88);
-}
-.page--dark .page-bar {
-  background: rgba(16, 35, 45, 0.78);
-  border-bottom-color: rgba(255, 255, 255, 0.08);
-}
-
-.page-back {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 44px;
-  padding: 8px 18px 8px 12px;
-  border-radius: 999px;
-  background: rgba(16, 35, 45, 0.06);
-  font-size: 0.92rem;
-  font-weight: 600;
-  text-decoration: none;
-  transition: background 0.3s, color 0.3s, transform 0.3s var(--ease-out);
-  -webkit-tap-highlight-color: transparent;
-}
-.page--dark .page-back {
-  background: rgba(255, 255, 255, 0.1);
-}
-.page-back-icon {
-  width: 20px;
-  height: 14px;
-  background: currentColor;
-  clip-path: polygon(0 100%, 32% 30%, 46% 55%, 66% 0, 100% 100%);
-}
-.page-back:active {
-  transform: scale(0.97);
-}
-@media (hover: hover) {
-  .page-back:hover,
-  .page--dark .page-back:hover {
-    background: var(--gold);
-    color: #1d1208;
-  }
-}
-.page-bar-title {
-  font-size: 0.74rem;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  opacity: 0.6;
-}
-@media (max-width: 480px) {
-  .page-bar-title {
-    display: none;
-  }
-}
 
 .page-inner {
   flex: 1 0 auto;
@@ -695,64 +538,8 @@ body.page-open .landing {
 .page--dark .eyebrow-num { color: var(--lake-light); }
 .page--dark h2 em { color: var(--gold); }
 .page--dark .lead { color: rgba(255, 255, 255, 0.75); }
-
-/* "Next peak" link at the bottom of every page, sitting on a small ridge */
-.page-next {
-  position: relative;
-  flex: none;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-  padding: 44px var(--gutter) calc(96px + env(safe-area-inset-bottom));
-  text-decoration: none;
-  text-align: center;
-  overflow: hidden;
-  -webkit-tap-highlight-color: transparent;
-}
-.page-next::after {
-  content: "";
-  position: absolute;
-  left: -2%;
-  right: -2%;
-  bottom: 0;
-  height: 90px;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 90' preserveAspectRatio='none'%3E%3Cpath fill='%2310232d' fill-opacity='0.08' d='M0 90 L0 60 L120 34 L230 62 L360 18 L480 58 L600 30 L720 4 L840 40 L960 22 L1090 60 L1210 28 L1330 56 L1440 36 L1440 90 Z'/%3E%3C/svg%3E") bottom / 100% 100% no-repeat;
-  transition: transform 0.6s var(--ease-out);
-}
-.page--dark .page-next::after {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 90' preserveAspectRatio='none'%3E%3Cpath fill='%23ffffff' fill-opacity='0.07' d='M0 90 L0 60 L120 34 L230 62 L360 18 L480 58 L600 30 L720 4 L840 40 L960 22 L1090 60 L1210 28 L1330 56 L1440 36 L1440 90 Z'/%3E%3C/svg%3E");
-}
-.page-next span {
-  font-size: 0.74rem;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  opacity: 0.6;
-}
-.page-next b {
-  font-family: var(--font-display);
-  font-size: clamp(2rem, 6vw, 3rem);
-  font-weight: 300;
-  font-style: italic;
-  transition: color 0.4s;
-}
-.page-next b::after {
-  content: " ↑";
-  font-style: normal;
-  font-size: 0.6em;
-  vertical-align: middle;
-}
-@media (hover: hover) {
-  .page-next:hover b {
-    color: var(--gold-deep);
-  }
-  .page--dark .page-next:hover b {
-    color: var(--gold);
-  }
-  .page-next:hover::after {
-    transform: translateY(-8px);
-  }
+.sheet .page-inner {
+  padding-bottom: clamp(80px, 10vw, 120px);
 }
 
 /* =========================================================
@@ -1561,5 +1348,136 @@ body.page-open .landing {
   }
   .landing-hint::after {
     display: none;
+  }
+}
+
+/* The current peak lights up like on hover */
+.peak.is-active .peak-rock { fill: #2b5163; }
+.peak.is-active .peak-snow { fill: #f6c27f; }
+.peak.is-active .peak-pill {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: #1d1208;
+  box-shadow: 0 10px 24px -8px rgba(224, 154, 79, 0.9);
+}
+.peak.is-active .peak-num { color: #1d1208; }
+
+/* =========================================================
+   FLY — fixed mountain stage, the camera pans and zooms with scroll
+   ========================================================= */
+.v-fly .fly-stage {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  isolation: isolate;
+}
+.v-fly .fly-pano {
+  position: absolute;
+  left: 0;
+  top: calc(100% - var(--ch, 300px));
+  width: var(--cw, 100vw);
+  height: var(--ch, 300px);
+  transform-origin: 0 0;
+  will-change: transform;
+}
+.v-fly .pano-canvas {
+  height: 100%;
+  aspect-ratio: auto;
+}
+/* Flags keep a readable size while the camera zooms in */
+.v-fly .peak-flag {
+  transform: translateX(-50%) scale(var(--inv, 1));
+  transform-origin: 50% 100%;
+}
+.v-fly .peak:hover .peak-flag,
+.v-fly .peak:focus-visible .peak-flag,
+.v-fly .peak.is-active .peak-flag {
+  transform: translate(-50%, -8px) scale(var(--inv, 1));
+}
+
+.v-fly .fly-intro {
+  position: relative;
+  z-index: 1;
+  background: transparent;
+  overflow: visible;
+  padding-bottom: var(--ch, 300px);
+  pointer-events: none;
+  transition: none;
+}
+.v-fly .fly-intro .landing-content {
+  will-change: opacity, transform;
+}
+
+.v-fly .fly-gap {
+  position: relative;
+  z-index: 1;
+  height: 95vh;
+  pointer-events: none;
+}
+.v-fly .fly-end {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 16px;
+  padding-top: 18vh;
+  color: #fff;
+  text-align: center;
+}
+.v-fly .fly-end-text {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.8rem, 5vw, 2.8rem);
+  text-shadow: 0 6px 30px rgba(0, 0, 0, 0.4);
+}
+.v-fly .fly-end-btn {
+  pointer-events: auto;
+}
+
+/* The names sit centred in the space above the mountains, never behind them
+   (script.js sets --ch to the mountains' height for each screen) */
+.v-fly .fly-intro {
+  justify-content: center;
+}
+.v-fly .fly-intro .landing-content {
+  flex: none;
+}
+
+/* ---------- Phone on its side: compact names so the whole range fits below ---------- */
+@media (max-height: 500px) and (orientation: landscape) {
+  .v-fly .fly-intro .landing-content {
+    padding: calc(10px + env(safe-area-inset-top)) max(var(--gutter), env(safe-area-inset-right)) 4px max(var(--gutter), env(safe-area-inset-left));
+  }
+  .v-fly .fly-intro .eyebrow,
+  .v-fly .fly-intro .landing-hint {
+    display: none;
+  }
+  .v-fly .landing-title {
+    margin: 0 0 2px;
+    font-size: clamp(1.7rem, 6.5vh, 2.3rem);
+  }
+  .v-fly .landing-date {
+    font-size: 1rem;
+  }
+  .v-fly .landing-place {
+    font-size: 0.78rem;
+  }
+  .v-fly .countdown {
+    margin: 8px 0 0;
+    width: min(100%, 300px);
+    gap: 6px;
+  }
+  .v-fly .countdown-unit {
+    padding: 5px 4px 4px;
+    border-radius: 10px;
+  }
+  .v-fly .countdown-num {
+    font-size: 1.1rem;
+  }
+  .v-fly .countdown-label {
+    margin-top: 2px;
+    font-size: 0.56rem;
   }
 }

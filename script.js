@@ -1,12 +1,12 @@
 /* =========================================================
    Gwyneth & Daniel — interactions
-   The landing page is a mountain panorama; each peak opens a page.
+   Scrolling flies a "camera" across the mountain panorama,
+   peak by peak; each section rises up after its peak.
    ========================================================= */
 
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 const CONTACT_EMAIL = 'schoellenberger@me.com';
-const SITE_TITLE = document.title;
 
 /* ---------- Password gate ---------- */
 // Only a SHA-256 fingerprint of the password is stored here, not the password itself.
@@ -27,7 +27,9 @@ if (document.documentElement.classList.contains('locked')) {
     if ((await sha256(input.value.trim())) === GATE_HASH) {
       try { localStorage.setItem('gd-unlocked', '1'); } catch (e) { /* stays unlocked until reload */ }
       document.documentElement.classList.remove('locked');
-      updatePanorama();
+      window.scrollTo(0, 0);
+      // re-measure the mountains now that the site is visible
+      window.dispatchEvent(new Event('gd:unlocked'));
     } else {
       error.hidden = false;
       input.select();
@@ -38,112 +40,16 @@ if (document.documentElement.classList.contains('locked')) {
   });
 }
 
-/* ---------- Pages: open with a peak, close with "Back to the mountains" ---------- */
-const pages = Array.from(document.querySelectorAll('[data-page]'));
-const PAGE_SPEED = reduceMotion ? 0 : 750;
-let pageLayer = 0;
-let currentPage = null;
-let lastTrigger = null;
+/* ---------- Helpers ---------- */
+const clamp01 = (n) => Math.min(Math.max(n, 0), 1);
+const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 
-pages.forEach((page) => { page.inert = true; });
-
-function route(id, { animate = true } = {}) {
-  const target = pages.find((page) => page.id === id);
-
-  if (target) {
-    if (target === currentPage) return;
-    const previous = currentPage;
-    currentPage = target;
-    pageLayer += 1;
-    target.style.zIndex = String(40 + pageLayer);
-    target.classList.toggle('no-anim', !animate);
-    target.scrollTop = 0;
-    target.inert = false;
-    target.classList.add('is-open');
-    document.body.classList.add('page-open');
-    document.title = `${target.querySelector('.page-bar-title').textContent.replace(/^\d+ · /, '')} · ${SITE_TITLE}`;
-
-    // the page we came from slides away underneath once the new one covers it
-    if (previous) {
-      setTimeout(() => {
-        if (currentPage !== previous) {
-          previous.classList.add('no-anim');
-          previous.classList.remove('is-open');
-          previous.inert = true;
-        }
-      }, PAGE_SPEED);
-    }
-    const heading = target.querySelector('h2');
-    setTimeout(() => heading && heading.focus({ preventScroll: true }), animate ? 50 : 0);
-    updateTimeline();
-  } else {
-    if (!currentPage) return;
-    pages.forEach((page) => {
-      page.classList.toggle('no-anim', !animate);
-      page.classList.remove('is-open');
-      page.inert = true;
-    });
-    currentPage = null;
-    document.body.classList.remove('page-open');
-    document.title = SITE_TITLE;
-    if (lastTrigger) lastTrigger.focus({ preventScroll: true });
-  }
+function scrollToY(y) {
+  window.scrollTo({ top: y, behavior: reduceMotion ? 'auto' : 'smooth' });
 }
 
-function go(id) {
-  if (location.hash !== `#${id}`) history.pushState(null, '', `#${id}`);
-  route(id);
-}
 
-// All in-page links (#info, #home, …) go through the router instead of jumping
-document.addEventListener('click', (event) => {
-  const link = event.target.closest('a[href^="#"]');
-  if (!link) return;
-  const id = link.getAttribute('href').slice(1);
-  if (id !== 'home' && !pages.some((page) => page.id === id)) return;
-  event.preventDefault();
-  if (link.classList.contains('peak')) lastTrigger = link;
-  go(id);
-});
-
-window.addEventListener('popstate', () => route(location.hash.slice(1)));
-document.addEventListener('keydown', (event) => {
-  if (event.key === 'Escape' && currentPage) go('home');
-});
-
-
-/* ---------- Panorama: swipe on phones, dots show where you are ---------- */
-const panorama = document.querySelector('.panorama');
-const scroller = document.querySelector('[data-pano-scroller]');
-const snaps = Array.from(document.querySelectorAll('.pano-snap'));
-const dots = Array.from(document.querySelectorAll('[data-pano-dots] button'));
-
-function snapLeft(i) {
-  return snaps[i].offsetLeft - scroller.clientWidth / 2;
-}
-
-function updatePanorama() {
-  const scrollable = scroller.scrollWidth > scroller.clientWidth + 2;
-  panorama.classList.toggle('is-scrollable', scrollable);
-  if (!scrollable) return;
-  const center = scroller.scrollLeft + scroller.clientWidth / 2;
-  let nearest = 0;
-  snaps.forEach((snap, i) => {
-    if (Math.abs(snap.offsetLeft - center) < Math.abs(snaps[nearest].offsetLeft - center)) nearest = i;
-  });
-  dots.forEach((dot, i) => dot.classList.toggle('is-active', i === nearest));
-}
-
-dots.forEach((dot, i) => {
-  dot.addEventListener('click', () => {
-    scroller.scrollTo({ left: snapLeft(i), behavior: reduceMotion ? 'auto' : 'smooth' });
-  });
-});
-scroller.addEventListener('scroll', () => requestAnimationFrame(updatePanorama), { passive: true });
-window.addEventListener('resize', updatePanorama);
-updatePanorama();
-
-/* ---------- Reveal page content as it scrolls into view ---------- */
+/* ---------- Reveal content as it scrolls into view ---------- */
 const revealObserver = new IntersectionObserver((entries) => {
   entries.forEach((entry) => {
     if (entry.isIntersecting) {
@@ -155,7 +61,6 @@ const revealObserver = new IntersectionObserver((entries) => {
 document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el));
 
 /* ---------- Schedule: the trail fills in as you scroll ---------- */
-const schedulePage = document.getElementById('schedule');
 const timeline = document.querySelector('[data-timeline]');
 const timelineItems = timeline ? Array.from(timeline.querySelectorAll('.timeline-item')) : [];
 
@@ -163,17 +68,14 @@ function updateTimeline() {
   if (!timeline) return;
   const rect = timeline.getBoundingClientRect();
   const marker = window.innerHeight * 0.6;
-  const progress = Math.min(Math.max((marker - rect.top) / rect.height, 0), 1);
+  const progress = clamp01((marker - rect.top) / rect.height);
   timeline.style.setProperty('--progress', progress.toFixed(4));
   timelineItems.forEach((item) => {
     const dot = item.querySelector('.timeline-dot').getBoundingClientRect();
     item.classList.toggle('is-passed', dot.top < marker);
   });
 }
-if (schedulePage) {
-  schedulePage.addEventListener('scroll', () => requestAnimationFrame(updateTimeline), { passive: true });
-  schedulePage.addEventListener('transitionend', updateTimeline);
-}
+window.addEventListener('scroll', () => requestAnimationFrame(updateTimeline), { passive: true });
 
 /* ---------- Countdown ---------- */
 const countdown = document.querySelector('[data-countdown]');
@@ -452,5 +354,133 @@ if (contactForm) {
   });
 }
 
-/* ---------- Start: opening the site with e.g. /#rsvp shows that page straight away ---------- */
-route(location.hash.slice(1), { animate: false });
+/* =========================================================
+   Mountain flight
+   - Laptop, tablet, phone on its side: the whole range is visible
+     under the names, then the camera zooms from peak to peak.
+   - Phone held upright: the range is shown large under the names,
+     starting at the far-left peak; scrolling pans right peak by peak.
+   ========================================================= */
+(() => {
+  const pano = document.querySelector('[data-fly-pano]');
+  const peaks = Array.from(pano.querySelectorAll('.peak'));
+  const gaps = Array.from(document.querySelectorAll('[data-fly-target]'));
+  const intro = document.querySelector('.fly-intro');
+  const introContent = intro.querySelector('.landing-content');
+  const RATIO = 420 / 1600; // height / width of the drawing
+
+  // each peak's summit as a fraction of the drawing (from its flag position)
+  const summits = peaks.map((peak) => [
+    parseFloat(peak.style.getPropertyValue('--x')) / 100,
+    1 - parseFloat(peak.style.getPropertyValue('--y')) / 100,
+  ]);
+
+  let vw, vh, cw, ch, portrait;
+
+  function measure() {
+    vw = window.innerWidth;
+    vh = window.innerHeight;
+    portrait = vw <= 640 && vh > vw;
+    if (portrait) {
+      // the mountains take all the room left under the names, date and countdown
+      const textHeight = introContent.getBoundingClientRect().height;
+      ch = Math.min(Math.max(vh - textHeight - 12, 260), vh * 0.62);
+      cw = ch / RATIO;
+    } else {
+      cw = vw;
+      ch = vw * RATIO;
+    }
+    document.documentElement.style.setProperty('--ch', `${ch}px`);
+    pano.style.setProperty('--cw', `${cw}px`);
+    pano.style.setProperty('--ch', `${ch}px`);
+  }
+
+  // keep the canvas covering the screen edges and bottom
+  function clampState(s, tx, ty) {
+    return {
+      s,
+      tx: Math.min(0, Math.max(tx, vw - s * cw)),
+      ty: Math.max(ty, ch * (1 - s)),
+    };
+  }
+
+  function peakState(i) {
+    const [fx, fy] = summits[i];
+    if (portrait) {
+      // pan to the peak and lift it slightly, keeping the lake on the bottom edge
+      const s = 1.12;
+      return clampState(s, vw / 2 - s * fx * cw, ch * (1 - s));
+    }
+    const s = vh < 500 ? 1.8 : 2.1;
+    return clampState(s, vw / 2 - s * fx * cw, vh * 0.42 - (vh - ch) - s * fy * ch);
+  }
+
+  // where the camera starts (and ends): the whole range, or the far-left peak on upright phones
+  function homeState() {
+    if (portrait) {
+      return clampState(1, vw / 2 - summits[0][0] * cw, 0);
+    }
+    return { s: 1, tx: 0, ty: 0 };
+  }
+
+  const lerp = (a, b, t) => a + (b - a) * t;
+
+  function render() {
+    const y = window.scrollY;
+    let prev = homeState();
+    let prevIndex = portrait ? 0 : -1;
+    let state = prev;
+    let active = prevIndex;
+
+    for (const gap of gaps) {
+      const target = gap.dataset.flyTarget === 'overview' ? -1 : Number(gap.dataset.flyTarget);
+      const to = target === -1 ? homeState() : peakState(target);
+      const p = clamp01((y - (gap.offsetTop - vh)) / gap.offsetHeight);
+      if (p <= 0) break;
+      const e = easeInOut(p);
+      state = { s: lerp(prev.s, to.s, e), tx: lerp(prev.tx, to.tx, e), ty: lerp(prev.ty, to.ty, e) };
+      active = p > 0.5 ? target : prevIndex;
+      prev = to;
+      prevIndex = target;
+    }
+
+    pano.style.transform = `translate3d(${state.tx}px, ${state.ty}px, 0) scale(${state.s})`;
+    pano.style.setProperty('--inv', (1 / state.s).toFixed(4));
+    peaks.forEach((peak, i) => peak.classList.toggle('is-active', i === active && y > 4));
+
+    const fade = clamp01(y / (vh * 0.45));
+    introContent.style.opacity = String(1 - fade);
+    introContent.style.transform = `translateY(${-fade * 60}px)`;
+  }
+
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => { render(); ticking = false; });
+  }, { passive: true });
+
+  const relayout = () => { measure(); render(); };
+  window.addEventListener('resize', relayout);
+  window.addEventListener('orientationchange', () => setTimeout(relayout, 250));
+  window.addEventListener('gd:unlocked', relayout);
+  // web fonts change the height of the names, which changes the room left for the mountains
+  if (document.fonts) document.fonts.ready.then(relayout);
+
+  // Tapping a peak (or "Back to the start") flies there
+  document.addEventListener('click', (event) => {
+    const link = event.target.closest('a[href^="#"]');
+    if (!link) return;
+    const id = link.getAttribute('href').slice(1);
+    const target = document.getElementById(id);
+    if (!target) return;
+    event.preventDefault();
+    scrollToY(id === 'home' ? 0 : target.offsetTop);
+    history.replaceState(null, '', `#${id}`);
+  });
+
+  measure();
+  render();
+  const start = document.getElementById(location.hash.slice(1));
+  if (start && start.classList.contains('sheet')) window.scrollTo(0, start.offsetTop);
+})();
