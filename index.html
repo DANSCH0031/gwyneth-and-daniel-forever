@@ -6,13 +6,36 @@
   <title>Gwyneth &amp; Daniel</title>
   <meta name="description" content="Gwyneth &amp; Daniel are getting married in Carinthia, Austria. Find the venues, schedule, FAQs and RSVP here.">
   <meta name="theme-color" content="#10232d">
-  <script>document.documentElement.classList.add('js');</script>
+  <meta name="robots" content="noindex, nofollow">
+  <script>
+    document.documentElement.classList.add('js');
+    // Password gate: stay locked unless this browser has entered the password (add ?lock to the URL to lock again)
+    (function () {
+      var root = document.documentElement;
+      try {
+        if (location.search.indexOf('lock') !== -1) localStorage.removeItem('gd-unlocked');
+        if (localStorage.getItem('gd-unlocked') !== '1') root.classList.add('locked');
+      } catch (e) {
+        root.classList.add('locked');
+      }
+    })();
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Instrument+Sans:wght@400..600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <!-- ============ PASSWORD GATE ============ -->
+  <div class="gate" data-gate>
+    <form class="gate-form" data-gate-form>
+      <label class="gate-label" for="gate-pw">Password</label>
+      <input id="gate-pw" type="password" inputmode="numeric" autocomplete="current-password" required>
+      <button class="gate-btn" type="submit">Enter</button>
+      <p class="gate-error" data-gate-error hidden>Wrong password</p>
+    </form>
+  </div>
+
   <a class="skip-link" href="#info">Skip to content</a>
   <div class="scroll-progress" aria-hidden="true"><span></span></div>
 

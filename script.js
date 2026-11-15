@@ -1,3 +1,34 @@
+/* ---------- Password gate ---------- */
+// Only a SHA-256 fingerprint of the password is stored here, not the password itself.
+const GATE_HASH = '00a15bc830cbc98e7f401edd157cdf131b077807743a64c3accc3ffd4910156d';
+const gateForm = document.querySelector('[data-gate-form]');
+
+async function sha256(text) {
+  const bytes = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+  return Array.from(new Uint8Array(bytes), (b) => b.toString(16).padStart(2, '0')).join('');
+}
+
+if (document.documentElement.classList.contains('locked')) {
+  const input = gateForm.querySelector('input');
+  const error = document.querySelector('[data-gate-error]');
+  input.focus();
+  gateForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if ((await sha256(input.value.trim())) === GATE_HASH) {
+      try { localStorage.setItem('gd-unlocked', '1'); } catch (e) { /* stays unlocked until reload */ }
+      document.documentElement.classList.remove('locked');
+      window.scrollTo(0, 0);
+      window.dispatchEvent(new Event('scroll'));
+    } else {
+      error.hidden = false;
+      input.select();
+      gateForm.classList.remove('is-wrong');
+      void gateForm.offsetWidth;
+      gateForm.classList.add('is-wrong');
+    }
+  });
+}
+
 /* =========================================================
    Gwyneth & Daniel — interactions
    ========================================================= */
