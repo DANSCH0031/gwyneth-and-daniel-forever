@@ -8,6 +8,75 @@ const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').match
 const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 const CONTACT_EMAIL = 'schoellenberger@me.com';
 
+/* ---------- Language: English / Deutsch ----------
+   English is written in index.html, German comes from translations.js.
+   The site opens in the device's language (German devices get German,
+   everything else English); the flags switch and remember the choice.
+   Add ?lang=de or ?lang=en to a link to force a language. */
+const LANGS = ['en', 'de'];
+const englishByKey = {};
+const englishAttrs = new WeakMap();
+const I18N_ATTRS = ['placeholder', 'aria-label', 'alt', 'data-copy-label'];
+let currentLang = 'en';
+
+// remember the English texts written in the page before anything is swapped
+document.querySelectorAll('[data-i18n]').forEach((el) => {
+  englishByKey[el.dataset.i18n] = el.innerHTML;
+  el.dataset.en = el.innerHTML;
+});
+I18N_ATTRS.forEach((attr) => {
+  document.querySelectorAll(`[data-i18n-${attr}]`).forEach((el) => {
+    const saved = englishAttrs.get(el) || {};
+    saved[attr] = el.getAttribute(attr);
+    englishAttrs.set(el, saved);
+  });
+});
+
+function t(key) {
+  if (currentLang === 'de' && key in DE_TEXTS) return DE_TEXTS[key];
+  return EN_SCRIPT_TEXTS[key] ?? englishByKey[key] ?? key;
+}
+
+function setLanguage(lang, { remember = false } = {}) {
+  currentLang = LANGS.includes(lang) ? lang : 'en';
+  document.documentElement.lang = currentLang;
+  document.querySelectorAll('[data-i18n]').forEach((el) => {
+    const german = DE_TEXTS[el.dataset.i18n];
+    el.innerHTML = currentLang === 'de' && german !== undefined ? german : el.dataset.en;
+  });
+  I18N_ATTRS.forEach((attr) => {
+    document.querySelectorAll(`[data-i18n-${attr}]`).forEach((el) => {
+      const key = el.getAttribute(`data-i18n-${attr}`);
+      const german = DE_TEXTS[key];
+      el.setAttribute(attr, currentLang === 'de' && german !== undefined ? german : englishAttrs.get(el)[attr]);
+    });
+  });
+  document.querySelectorAll('.lang-switch [data-lang]').forEach((button) => {
+    button.setAttribute('aria-pressed', String(button.dataset.lang === currentLang));
+  });
+  if (remember) {
+    try { localStorage.setItem('gd-lang', currentLang); } catch (e) { /* not saved in private mode */ }
+  }
+  // text length changes, so the mountains re-measure the room they have
+  window.dispatchEvent(new Event('resize'));
+}
+
+function preferredLanguage() {
+  const fromUrl = new URLSearchParams(location.search).get('lang');
+  if (LANGS.includes(fromUrl)) return fromUrl;
+  try {
+    const saved = localStorage.getItem('gd-lang');
+    if (LANGS.includes(saved)) return saved;
+  } catch (e) { /* ignore */ }
+  const deviceLangs = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || 'en'];
+  return deviceLangs.some((l) => String(l).toLowerCase().startsWith('de')) ? 'de' : 'en';
+}
+
+document.querySelectorAll('.lang-switch [data-lang]').forEach((button) => {
+  button.addEventListener('click', () => setLanguage(button.dataset.lang, { remember: true }));
+});
+setLanguage(preferredLanguage());
+
 /* ---------- Password gate ---------- */
 // Only a SHA-256 fingerprint of the password is stored here, not the password itself.
 const GATE_HASH = '00a15bc830cbc98e7f401edd157cdf131b077807743a64c3accc3ffd4910156d';
@@ -145,7 +214,7 @@ document.querySelectorAll('[data-copy]').forEach((button) => {
   button.addEventListener('click', async () => {
     try {
       await navigator.clipboard.writeText(button.dataset.copy);
-      showToast(button.dataset.copyLabel || 'Copied ✓');
+      showToast(button.dataset.copyLabel || t('copied'));
     } catch {
       showToast(button.dataset.copy);
     }
@@ -206,19 +275,19 @@ form.addEventListener('submit', (event) => {
 
   const yes = attending.value === 'yes';
   const lines = [
-    `Name: ${name}`,
-    `Attending: ${yes ? 'Yes, joyfully accept' : 'No, regretfully decline'}`,
+    `${t('mail.name')}: ${name}`,
+    `${t('mail.attending')}: ${yes ? t('mail.yes') : t('mail.no')}`,
   ];
   if (yes) {
-    lines.push(`Guests: ${clampGuests(guestsInput.value)}`);
-    lines.push(`Dietary needs: ${dietInput.value.trim() || 'None'}`);
+    lines.push(`${t('mail.guests')}: ${clampGuests(guestsInput.value)}`);
+    lines.push(`${t('mail.diet')}: ${dietInput.value.trim() || t('mail.none')}`);
   }
-  if (messageInput.value.trim()) lines.push('', `Message: ${messageInput.value.trim()}`);
+  if (messageInput.value.trim()) lines.push('', `${t('mail.message')}: ${messageInput.value.trim()}`);
 
-  const subject = `RSVP – ${name} – ${yes ? 'Attending' : 'Not attending'}`;
+  const subject = `${t('mail.rsvp')} – ${name} – ${yes ? t('mail.subjectYes') : t('mail.subjectNo')}`;
   window.location.href = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(lines.join('\n'))}`;
 
-  doneTitle.textContent = yes ? 'Yay, see you there!' : 'Thank you for letting us know';
+  doneTitle.textContent = yes ? t('rsvp.thanksYes') : t('rsvp.thanksNo');
   form.hidden = true;
   done.hidden = false;
   if (yes) launchConfetti();
@@ -322,7 +391,7 @@ if (contactForm) {
     }
 
     submit.disabled = true;
-    submit.textContent = 'Sending…';
+    submit.textContent = t('contact.sending');
 
     try {
       const response = await fetch('https://api.web3forms.com/submit', {
@@ -330,7 +399,7 @@ if (contactForm) {
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify({
           access_key: WEB3FORMS_KEY,
-          subject: `Wedding website message from ${fields.name.value.trim()}`,
+          subject: `${t('contact.subject')} ${fields.name.value.trim()}`,
           from_name: 'G&D wedding website',
           name: fields.name.value.trim(),
           email: fields.email.value.trim(),
@@ -343,13 +412,13 @@ if (contactForm) {
 
       contactForm.reset();
       status.classList.add('is-success');
-      status.textContent = 'Thank you! Your message is on its way to us ♥';
+      status.textContent = t('contact.success');
     } catch (error) {
       status.classList.add('is-error');
-      status.textContent = 'Sorry, something went wrong. Please try again in a moment.';
+      status.textContent = t('contact.failed');
     } finally {
       submit.disabled = false;
-      submit.textContent = 'Send message';
+      submit.textContent = t('contact.send');
     }
   });
 }

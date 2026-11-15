@@ -29,11 +29,32 @@
   <!-- ============ PASSWORD GATE ============ -->
   <div class="gate" data-gate>
     <form class="gate-form" data-gate-form>
-      <label class="gate-label" for="gate-pw">Password</label>
+      <label class="gate-label" for="gate-pw" data-i18n="gate.label">Password</label>
       <input id="gate-pw" type="password" inputmode="numeric" autocomplete="current-password" required>
-      <button class="gate-btn" type="submit">Enter</button>
-      <p class="gate-error" data-gate-error hidden>Wrong password</p>
+      <button class="gate-btn" type="submit" data-i18n="gate.enter">Enter</button>
+      <p class="gate-error" data-gate-error hidden data-i18n="gate.error">Wrong password</p>
     </form>
+  </div>
+
+  <!-- Language switch: English / Deutsch -->
+  <div class="lang-switch" role="group" aria-label="Language / Sprache">
+    <button type="button" data-lang="en" aria-label="English" aria-pressed="false">
+      <svg viewBox="15 0 30 30" aria-hidden="true">
+        <clipPath id="flag-uk-cross"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath>
+        <path d="M0,0 v30 h60 v-30 z" fill="#012169"/>
+        <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/>
+        <path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#flag-uk-cross)" stroke="#C8102E" stroke-width="4"/>
+        <path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/>
+        <path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/>
+      </svg>
+    </button>
+    <button type="button" data-lang="de" aria-label="Deutsch" aria-pressed="false">
+      <svg viewBox="0 0 30 30" aria-hidden="true">
+        <rect width="30" height="10" fill="#000"/>
+        <rect y="10" width="30" height="10" fill="#DD0000"/>
+        <rect y="20" width="30" height="10" fill="#FFCE00"/>
+      </svg>
+    </button>
   </div>
 
   <!-- Fixed mountain stage: the "camera" flies across it as you scroll -->
@@ -54,7 +75,7 @@
                 <path class="peak-shade" d="M270 205 L282 216 L298 243 L312 233 L338 261 L370 280 L408 314 L458 354 L520 420 L300 420 L290 338 L275 270 Z"/>
                 <path class="peak-snow" d="M199 270 L205 267 L230 244 L254 220 L270 205 L282 216 L298 243 L312 233 L338 261 L352 270 L330 280 L308 267 L286 283 L264 266 L243 285 L221 269 Z"/>
               </svg>
-              <span class="peak-flag"><span class="peak-pill"><span class="peak-num">01</span><span class="peak-label">Information</span></span><span class="peak-pole"></span></span>
+              <span class="peak-flag"><span class="peak-pill"><span class="peak-num">01</span><span class="peak-label" data-i18n="peak.info">Information</span></span><span class="peak-pole"></span></span>
             </a>
             <a class="peak" href="#schedule" style="--x: 34.062%; --y: 67.857%; z-index: 2;" data-peak="1">
               <svg class="peak-svg" viewBox="0 0 1600 420" preserveAspectRatio="none" aria-hidden="true">
@@ -62,7 +83,7 @@
                 <path class="peak-shade" d="M545 135 L558 149 L575 178 L591 172 L618 215 L653 242 L694 278 L748 337 L815 420 L577 420 L567 312 L550 220 Z"/>
                 <path class="peak-snow" d="M458 220 L478 204 L503 199 L528 155 L545 135 L558 149 L575 178 L591 172 L618 215 L625 220 L602 244 L578 216 L554 246 L530 214 L506 244 L482 213 Z"/>
               </svg>
-              <span class="peak-flag"><span class="peak-pill"><span class="peak-num">02</span><span class="peak-label">Schedule</span></span><span class="peak-pole"></span></span>
+              <span class="peak-flag"><span class="peak-pill"><span class="peak-num">02</span><span class="peak-label" data-i18n="peak.schedule">Schedule</span></span><span class="peak-pole"></span></span>
             </a>
             <a class="peak" href="#rsvp" style="--x: 50.000%; --y: 85.238%; z-index: 1;" data-peak="2">
               <svg class="peak-svg" viewBox="0 0 1600 420" preserveAspectRatio="none" aria-hidden="true">
@@ -70,7 +91,7 @@
                 <path class="peak-shade" d="M800 62 L814 80 L832 122 L849 109 L878 168 L916 180 L960 250 L1018 323 L1090 420 L835 420 L823 284 L806 169 Z"/>
                 <path class="peak-snow" d="M714 169 L728 151 L755 130 L782 87 L800 62 L814 80 L832 122 L849 109 L878 168 L883 169 L859 194 L835 156 L811 200 L786 166 L762 189 L738 156 Z"/>
               </svg>
-              <span class="peak-flag"><span class="peak-pill"><span class="peak-num">03</span><span class="peak-label">RSVP</span></span><span class="peak-pole"></span></span>
+              <span class="peak-flag"><span class="peak-pill"><span class="peak-num">03</span><span class="peak-label" data-i18n="peak.rsvp">RSVP</span></span><span class="peak-pole"></span></span>
             </a>
             <a class="peak" href="#faqs" style="--x: 66.562%; --y: 65.476%; z-index: 2;" data-peak="3">
               <svg class="peak-svg" viewBox="0 0 1600 420" preserveAspectRatio="none" aria-hidden="true">
@@ -78,7 +99,7 @@
                 <path class="peak-shade" d="M1065 145 L1079 159 L1096 178 L1113 181 L1141 215 L1177 245 L1219 295 L1275 343 L1345 420 L1099 420 L1087 316 L1071 228 Z"/>
                 <path class="peak-snow" d="M990 228 L1000 220 L1024 207 L1049 164 L1065 145 L1079 159 L1096 178 L1113 181 L1141 215 L1156 228 L1132 251 L1108 224 L1085 249 L1061 219 L1037 249 L1014 226 Z"/>
               </svg>
-              <span class="peak-flag"><span class="peak-pill"><span class="peak-num">04</span><span class="peak-label">FAQs</span></span><span class="peak-pole"></span></span>
+              <span class="peak-flag"><span class="peak-pill"><span class="peak-num">04</span><span class="peak-label" data-i18n="peak.faqs">FAQs</span></span><span class="peak-pole"></span></span>
             </a>
             <a class="peak" href="#contact" style="--x: 83.438%; --y: 50.000%; z-index: 3;" data-peak="4">
               <svg class="peak-svg" viewBox="0 0 1600 420" preserveAspectRatio="none" aria-hidden="true">
@@ -86,7 +107,7 @@
                 <path class="peak-shade" d="M1335 210 L1350 220 L1367 238 L1384 237 L1413 262 L1451 291 L1494 322 L1552 352 L1625 420 L1370 420 L1358 340 L1341 273 Z"/>
                 <path class="peak-snow" d="M1263 273 L1275 267 L1298 253 L1320 225 L1335 210 L1350 220 L1367 238 L1384 237 L1413 262 L1428 273 L1404 289 L1381 265 L1357 288 L1333 266 L1310 290 L1286 265 Z"/>
               </svg>
-              <span class="peak-flag"><span class="peak-pill"><span class="peak-num">05</span><span class="peak-label">Contact</span></span><span class="peak-pole"></span></span>
+              <span class="peak-flag"><span class="peak-pill"><span class="peak-num">05</span><span class="peak-label" data-i18n="peak.contact">Contact</span></span><span class="peak-pole"></span></span>
             </a>
             <svg class="pano-layer pano-front" viewBox="0 0 1600 420" preserveAspectRatio="none" aria-hidden="true">
               <defs><linearGradient id="lake" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a9a9c"/><stop offset="1" stop-color="#0d4c56"/></linearGradient></defs>
@@ -125,24 +146,28 @@
 
   <div class="landing fly-intro" id="home">
     <header class="landing-content">
-      <p class="eyebrow in" style="--d: 0.1s">We're getting married</p>
+      <p class="eyebrow in" style="--d: 0.1s" data-i18n="intro.eyebrow">We're getting married</p>
       <h1 class="landing-title">
         <span class="in" style="--d: 0.2s">Gwyneth</span>
         <span class="landing-amp in" style="--d: 0.35s">&amp;</span>
         <span class="in" style="--d: 0.5s">Daniel</span>
       </h1>
-      <p class="landing-date in" style="--d: 0.65s"><time datetime="2027-09-18">18 September 2027</time></p>
-      <p class="landing-place in" style="--d: 0.75s">Sternberg &amp; Faaker See · Carinthia, Austria</p>
+      <p class="landing-date in" style="--d: 0.65s"><time datetime="2027-09-18" data-i18n="intro.date">18 September 2027</time></p>
+      <p class="landing-place in" style="--d: 0.75s" data-i18n="intro.place">Sternberg &amp; Faaker See · Carinthia, Austria</p>
 
       <!-- Wedding date for the countdown (Austrian summer time, +02:00). Add the ceremony time when known, e.g. 2027-09-18T14:00:00+02:00 -->
       <div class="countdown in" style="--d: 0.85s" data-countdown data-date="2027-09-18T00:00:00+02:00">
-        <div class="countdown-unit"><span class="countdown-num" data-unit="days">–</span><span class="countdown-label">Days</span></div>
-        <div class="countdown-unit"><span class="countdown-num" data-unit="hours">–</span><span class="countdown-label">Hours</span></div>
-        <div class="countdown-unit"><span class="countdown-num" data-unit="minutes">–</span><span class="countdown-label">Min</span></div>
-        <div class="countdown-unit"><span class="countdown-num" data-unit="seconds">–</span><span class="countdown-label">Sec</span></div>
+        <div class="countdown-unit"><span class="countdown-num" data-unit="days">–</span><span class="countdown-label" data-i18n="count.days">Days</span></div>
+        <div class="countdown-unit"><span class="countdown-num" data-unit="hours">–</span><span class="countdown-label" data-i18n="count.hours">Hours</span></div>
+        <div class="countdown-unit"><span class="countdown-num" data-unit="minutes">–</span><span class="countdown-label" data-i18n="count.min">Min</span></div>
+        <div class="countdown-unit"><span class="countdown-num" data-unit="seconds">–</span><span class="countdown-label" data-i18n="count.sec">Sec</span></div>
       </div>
 
-      <p class="landing-hint in" style="--d: 1.6s">Scroll to fly across the mountains</p>
+      <!-- Looping "scroll down" animation: a mouse wheel on laptops, a swiping finger on phones -->
+      <div class="scroll-hint in" style="--d: 1.6s" aria-hidden="true">
+        <span class="scroll-mouse"><span class="scroll-wheel"></span></span>
+        <span class="scroll-swipe"><span class="scroll-finger"></span></span>
+      </div>
     </header>
   </div>
 
@@ -151,37 +176,37 @@
   <section class="sheet" id="info" aria-labelledby="info-title">
     <div class="page-inner">
       <div class="page-head reveal">
-        <p class="eyebrow"><span class="eyebrow-num">01</span>Information</p>
-        <h2 id="info-title" tabindex="-1">Where it all <em>happens</em></h2>
-        <p class="lead">Two of our favourite places in Carinthia: a church on a hilltop and a hotel on an island in the lake.</p>
+        <p class="eyebrow" data-i18n="info.eyebrow"><span class="eyebrow-num">01</span>Information</p>
+        <h2 id="info-title" tabindex="-1" data-i18n="info.title">Where it all <em>happens</em></h2>
+        <p class="lead" data-i18n="info.lead">Two of our favourite places in Carinthia: a church on a hilltop and a hotel on an island in the lake.</p>
       </div>
 
       <div class="venues">
         <article class="venue reveal" data-tilt>
           <div class="venue-media">
-            <img src="sternberg.jpg" alt="The white church and parsonage of Sternberg on a wooded hilltop at sunset" width="2048" height="1366" loading="lazy">
-            <span class="venue-tag">Venue 1</span>
+            <img src="sternberg.jpg" alt="The white church and parsonage of Sternberg on a wooded hilltop at sunset" data-i18n-alt="info.sternbergAlt" width="2048" height="1366" loading="lazy">
+            <span class="venue-tag" data-i18n="info.venue1">Venue 1</span>
           </div>
           <div class="venue-body">
             <h3>Pfarrhaus Sternberg</h3>
-            <p>A white church above the valley, with views over the mountains.</p>
+            <p data-i18n="info.sternberg">A white church above the valley, with views over the mountains.</p>
             <div class="venue-links">
-              <a class="link-arrow" href="https://www.google.com/maps/search/?api=1&amp;query=Pfarrhaus+Sternberg+K%C3%A4rnten" target="_blank" rel="noopener">Open in Maps</a>
+              <a class="link-arrow" href="https://www.google.com/maps/search/?api=1&amp;query=Pfarrhaus+Sternberg+K%C3%A4rnten" target="_blank" rel="noopener" data-i18n="info.maps">Open in Maps</a>
             </div>
           </div>
         </article>
 
         <article class="venue reveal" style="--d: 0.12s" data-tilt>
           <div class="venue-media">
-            <img src="Inselhotel.jpg" alt="Aerial view of the Inselhotel on its green island in the turquoise Faaker See" width="1024" height="683" loading="lazy">
-            <span class="venue-tag">Venue 2</span>
+            <img src="Inselhotel.jpg" alt="Aerial view of the Inselhotel on its green island in the turquoise Faaker See" data-i18n-alt="info.inselAlt" width="1024" height="683" loading="lazy">
+            <span class="venue-tag" data-i18n="info.venue2">Venue 2</span>
           </div>
           <div class="venue-body">
             <h3>Inselhotel Faaker See</h3>
-            <p>A small island surrounded by the turquoise water of Faaker See.</p>
+            <p data-i18n="info.insel">A small island surrounded by the turquoise water of Faaker See.</p>
             <div class="venue-links">
-              <a class="link-arrow" href="https://inselhotel.at" target="_blank" rel="noopener">Visit website</a>
-              <a class="link-arrow" href="https://www.google.com/maps/search/?api=1&amp;query=Inselhotel+Faaker+See" target="_blank" rel="noopener">Open in Maps</a>
+              <a class="link-arrow" href="https://inselhotel.at" target="_blank" rel="noopener" data-i18n="info.website">Visit website</a>
+              <a class="link-arrow" href="https://www.google.com/maps/search/?api=1&amp;query=Inselhotel+Faaker+See" target="_blank" rel="noopener" data-i18n="info.maps">Open in Maps</a>
             </div>
           </div>
         </article>
@@ -194,50 +219,50 @@
   <section class="sheet page--dark" id="schedule" aria-labelledby="schedule-title">
     <div class="page-inner">
       <div class="page-head reveal">
-        <p class="eyebrow"><span class="eyebrow-num">02</span>Schedule</p>
-        <h2 id="schedule-title" tabindex="-1">The day, <em>step by step</em></h2>
-        <p class="lead">Exact times will be added here closer to the day.</p>
+        <p class="eyebrow" data-i18n="sched.eyebrow"><span class="eyebrow-num">02</span>Schedule</p>
+        <h2 id="schedule-title" tabindex="-1" data-i18n="sched.title">The day, <em>step by step</em></h2>
+        <p class="lead" data-i18n="sched.lead">Exact times will be added here closer to the day.</p>
       </div>
 
       <ol class="timeline" data-timeline>
         <li class="timeline-item reveal">
           <span class="timeline-dot" aria-hidden="true"></span>
           <div class="timeline-card">
-            <span class="timeline-time">Time TBA</span>
-            <h3>Guests arrive</h3>
-            <p>Find your seat and say hello.</p>
+            <span class="timeline-time" data-i18n="sched.tba">Time TBA</span>
+            <h3 data-i18n="sched.arrive">Guests arrive</h3>
+            <p data-i18n="sched.arrive.text">Find your seat and say hello.</p>
           </div>
         </li>
         <li class="timeline-item reveal">
           <span class="timeline-dot" aria-hidden="true"></span>
           <div class="timeline-card">
-            <span class="timeline-time">Time TBA</span>
-            <h3>Ceremony</h3>
-            <p>The moment we say “yes”.</p>
+            <span class="timeline-time" data-i18n="sched.tba">Time TBA</span>
+            <h3 data-i18n="sched.ceremony">Ceremony</h3>
+            <p data-i18n="sched.ceremony.text">The moment we say “yes”.</p>
           </div>
         </li>
         <li class="timeline-item reveal">
           <span class="timeline-dot" aria-hidden="true"></span>
           <div class="timeline-card">
-            <span class="timeline-time">Time TBA</span>
-            <h3>Drinks &amp; photos</h3>
-            <p>Toasts, hugs and lots of pictures.</p>
+            <span class="timeline-time" data-i18n="sched.tba">Time TBA</span>
+            <h3 data-i18n="sched.drinks">Drinks &amp; photos</h3>
+            <p data-i18n="sched.drinks.text">Toasts, hugs and lots of pictures.</p>
           </div>
         </li>
         <li class="timeline-item reveal">
           <span class="timeline-dot" aria-hidden="true"></span>
           <div class="timeline-card">
-            <span class="timeline-time">Time TBA</span>
-            <h3>Dinner</h3>
-            <p>Good food, good company, and a few speeches.</p>
+            <span class="timeline-time" data-i18n="sched.tba">Time TBA</span>
+            <h3 data-i18n="sched.dinner">Dinner</h3>
+            <p data-i18n="sched.dinner.text">Good food, good company, and a few speeches.</p>
           </div>
         </li>
         <li class="timeline-item reveal">
           <span class="timeline-dot" aria-hidden="true"></span>
           <div class="timeline-card">
-            <span class="timeline-time">Time TBA</span>
-            <h3>Party</h3>
-            <p>Dancing until late.</p>
+            <span class="timeline-time" data-i18n="sched.tba">Time TBA</span>
+            <h3 data-i18n="sched.party">Party</h3>
+            <p data-i18n="sched.party.text">Dancing until late.</p>
           </div>
         </li>
       </ol>
@@ -249,64 +274,64 @@
   <section class="sheet" id="rsvp" aria-labelledby="rsvp-title">
     <div class="page-inner page-inner--narrow">
       <div class="page-head reveal">
-        <p class="eyebrow"><span class="eyebrow-num">03</span>RSVP</p>
-        <h2 id="rsvp-title" tabindex="-1">Will you <em>join us?</em></h2>
-        <p class="lead">Please let us know by <b>1 June 2027</b> if you can come. When you press send, your email app opens with your answer filled in.</p>
+        <p class="eyebrow" data-i18n="rsvp.eyebrow"><span class="eyebrow-num">03</span>RSVP</p>
+        <h2 id="rsvp-title" tabindex="-1" data-i18n="rsvp.title">Will you <em>join us?</em></h2>
+        <p class="lead" data-i18n="rsvp.lead">Please let us know by <b>1 June 2027</b> if you can come. When you press send, your email app opens with your answer filled in.</p>
       </div>
 
       <div class="rsvp-card reveal">
         <form class="rsvp-form" data-rsvp novalidate>
           <div class="field">
-            <label for="rsvp-name">Your name(s)</label>
-            <input id="rsvp-name" name="name" type="text" autocomplete="name" placeholder="e.g. Anna &amp; Max Muster" required>
-            <span class="field-error">Please tell us your name.</span>
+            <label for="rsvp-name" data-i18n="rsvp.name">Your name(s)</label>
+            <input id="rsvp-name" name="name" type="text" autocomplete="name" placeholder="e.g. Anna &amp; Max Muster" data-i18n-placeholder="rsvp.namePh" required>
+            <span class="field-error" data-i18n="form.nameError">Please tell us your name.</span>
           </div>
 
           <fieldset class="field">
-            <legend>Can you come?</legend>
+            <legend data-i18n="rsvp.come">Can you come?</legend>
             <div class="choice">
               <label class="choice-option">
                 <input type="radio" name="attending" value="yes" required>
-                <span><b>Joyfully accept</b><small>Can't wait!</small></span>
+                <span><b data-i18n="rsvp.yes">Joyfully accept</b><small data-i18n="rsvp.yes.sub">Can't wait!</small></span>
               </label>
               <label class="choice-option">
                 <input type="radio" name="attending" value="no">
-                <span><b>Regretfully decline</b><small>We'll miss you</small></span>
+                <span><b data-i18n="rsvp.no">Regretfully decline</b><small data-i18n="rsvp.no.sub">We'll miss you</small></span>
               </label>
             </div>
-            <span class="field-error">Please choose one.</span>
+            <span class="field-error" data-i18n="rsvp.chooseError">Please choose one.</span>
           </fieldset>
 
           <div class="rsvp-extra" data-rsvp-extra>
             <div class="rsvp-extra-inner">
               <div class="field">
-                <label for="rsvp-guests">Number of guests (including you)</label>
+                <label for="rsvp-guests" data-i18n="rsvp.guests">Number of guests (including you)</label>
                 <div class="stepper">
-                  <button type="button" class="stepper-btn" data-step="-1" aria-label="One fewer guest">−</button>
+                  <button type="button" class="stepper-btn" data-step="-1" aria-label="One fewer guest" data-i18n-aria-label="rsvp.fewer">−</button>
                   <input id="rsvp-guests" name="guests" type="number" min="1" max="10" value="1" inputmode="numeric">
-                  <button type="button" class="stepper-btn" data-step="1" aria-label="One more guest">+</button>
+                  <button type="button" class="stepper-btn" data-step="1" aria-label="One more guest" data-i18n-aria-label="rsvp.more">+</button>
                 </div>
               </div>
               <div class="field">
-                <label for="rsvp-diet">Dietary needs or allergies</label>
-                <input id="rsvp-diet" name="diet" type="text" placeholder="Vegetarian, gluten-free, none…">
+                <label for="rsvp-diet" data-i18n="rsvp.diet">Dietary needs or allergies</label>
+                <input id="rsvp-diet" name="diet" type="text" placeholder="Vegetarian, gluten-free, none…" data-i18n-placeholder="rsvp.dietPh">
               </div>
             </div>
           </div>
 
           <div class="field">
-            <label for="rsvp-message">A note for us <span class="optional">(optional)</span></label>
-            <textarea id="rsvp-message" name="message" rows="3" placeholder="Song requests, wishes, anything you like…"></textarea>
+            <label for="rsvp-message" data-i18n="rsvp.note">A note for us <span class="optional">(optional)</span></label>
+            <textarea id="rsvp-message" name="message" rows="3" placeholder="Song requests, wishes, anything you like…" data-i18n-placeholder="rsvp.notePh"></textarea>
           </div>
 
-          <button class="btn btn-gold btn-block" type="submit">Send RSVP</button>
+          <button class="btn btn-gold btn-block" type="submit" data-i18n="rsvp.send">Send RSVP</button>
         </form>
 
         <div class="rsvp-done" data-rsvp-done hidden>
           <div class="rsvp-done-icon" aria-hidden="true">♥</div>
           <h3 data-rsvp-done-title>Thank you!</h3>
-          <p>Your email app should have opened with your answer. Remember to press <b>send</b> there too.</p>
-          <button class="btn btn-ghost" type="button" data-rsvp-reset>Edit my answer</button>
+          <p data-i18n="rsvp.done.text">Your email app should have opened with your answer. Remember to press <b>send</b> there too.</p>
+          <button class="btn btn-ghost" type="button" data-rsvp-reset data-i18n="rsvp.edit">Edit my answer</button>
         </div>
       </div>
     </div>
@@ -317,66 +342,66 @@
   <section class="sheet page--tint" id="faqs" aria-labelledby="faqs-title">
     <div class="page-inner page-inner--narrow">
       <div class="page-head reveal">
-        <p class="eyebrow"><span class="eyebrow-num">04</span>FAQs</p>
-        <h2 id="faqs-title" tabindex="-1">Good <em>questions</em></h2>
-        <p class="lead">If your question isn't answered here, just ask us.</p>
+        <p class="eyebrow" data-i18n="faq.eyebrow"><span class="eyebrow-num">04</span>FAQs</p>
+        <h2 id="faqs-title" tabindex="-1" data-i18n="faq.title">Good <em>questions</em></h2>
+        <p class="lead" data-i18n="faq.lead">If your question isn't answered here, just ask us.</p>
       </div>
 
       <div class="faq-list">
         <div class="faq-item reveal">
           <button class="faq-q" type="button" aria-expanded="false">
-            <span>When do I need to RSVP by?</span><span class="faq-icon" aria-hidden="true"></span>
+            <span data-i18n="faq.q1">When do I need to RSVP by?</span><span class="faq-icon" aria-hidden="true"></span>
           </button>
-          <div class="faq-a"><div><p>Please let us know by <b>1 June 2027</b> using the <a href="#rsvp">RSVP form</a>. If your plans change later, just send us a message.</p></div></div>
+          <div class="faq-a"><div><p data-i18n="faq.a1">Please let us know by <b>1 June 2027</b> using the <a href="#rsvp">RSVP form</a>. If your plans change later, just send us a message.</p></div></div>
         </div>
         <div class="faq-item reveal">
           <button class="faq-q" type="button" aria-expanded="false">
-            <span>Where should I stay?</span><span class="faq-icon" aria-hidden="true"></span>
+            <span data-i18n="faq.q2">Where should I stay?</span><span class="faq-icon" aria-hidden="true"></span>
           </button>
           <div class="faq-a"><div>
-            <p>We have reserved rooms for our guests at the <b>Inselhotel Faaker See</b>, where we'll celebrate after the ceremony. Book through the <a href="https://inselhotel.at" target="_blank" rel="noopener">hotel's website</a> and use this code:</p>
+            <p data-i18n="faq.a2">We have reserved rooms for our guests at the <b>Inselhotel Faaker See</b>, where we'll celebrate after the ceremony. Book through the <a href="https://inselhotel.at" target="_blank" rel="noopener">hotel's website</a> and use this code:</p>
             <div class="faq-code">
               <code>GWENANDDANIEL</code>
-              <button class="faq-code-btn" type="button" data-copy="GWENANDDANIEL" data-copy-label="Booking code copied ✓">Copy code</button>
+              <button class="faq-code-btn" type="button" data-copy="GWENANDDANIEL" data-copy-label="Booking code copied ✓" data-i18n-data-copy-label="faq.copied" data-i18n="faq.copy">Copy code</button>
             </div>
-            <p>Rooms are limited, so we recommend booking early. There are also plenty of hotels and holiday apartments around Faaker See and Villach.</p>
+            <p data-i18n="faq.a2b">Rooms are limited, so we recommend booking early. There are also plenty of hotels and holiday apartments around Faaker See and Villach.</p>
           </div></div>
         </div>
         <div class="faq-item reveal">
           <button class="faq-q" type="button" aria-expanded="false">
-            <span>How do I get there, and how do I get between the venues?</span><span class="faq-icon" aria-hidden="true"></span>
+            <span data-i18n="faq.q3">How do I get there, and how do I get between the venues?</span><span class="faq-icon" aria-hidden="true"></span>
           </button>
-          <div class="faq-a"><div><p>The nearest airport is Klagenfurt. Ljubljana, Salzburg and Venice are also a few hours' drive away, and Villach is the closest major train station. On the day, we'll provide a <b>shuttle between Sternberg and the Inselhotel</b>, so you won't need to drive. We'll share the shuttle times here closer to the date.</p></div></div>
+          <div class="faq-a"><div><p data-i18n="faq.a3">The nearest airport is Klagenfurt. Ljubljana, Salzburg and Venice are also a few hours' drive away, and Villach is the closest major train station. On the day, we'll provide a <b>shuttle between Sternberg and the Inselhotel</b>, so you won't need to drive. We'll share the shuttle times here closer to the date.</p></div></div>
         </div>
         <div class="faq-item reveal">
           <button class="faq-q" type="button" aria-expanded="false">
-            <span>What should I wear?</span><span class="faq-icon" aria-hidden="true"></span>
+            <span data-i18n="faq.q4">What should I wear?</span><span class="faq-icon" aria-hidden="true"></span>
           </button>
-          <div class="faq-a"><div><p>Festive and elegant: a suit, a summer dress or a jumpsuit is perfect. Part of the day is outdoors on grass and by the lake, so choose shoes you can walk in comfortably, and bring a light jacket for the evening.</p></div></div>
+          <div class="faq-a"><div><p data-i18n="faq.a4">Festive and elegant: a suit, a summer dress or a jumpsuit is perfect. Part of the day is outdoors on grass and by the lake, so choose shoes you can walk in comfortably, and bring a light jacket for the evening.</p></div></div>
         </div>
         <div class="faq-item reveal">
           <button class="faq-q" type="button" aria-expanded="false">
-            <span>Are children welcome?</span><span class="faq-icon" aria-hidden="true"></span>
+            <span data-i18n="faq.q5">Are children welcome?</span><span class="faq-icon" aria-hidden="true"></span>
           </button>
-          <div class="faq-a"><div><p>Always! Children are very welcome. Please include them in your guest count when you RSVP so we can plan seats and meals.</p></div></div>
+          <div class="faq-a"><div><p data-i18n="faq.a5">Always! Children are very welcome. Please include them in your guest count when you RSVP so we can plan seats and meals.</p></div></div>
         </div>
         <div class="faq-item reveal">
           <button class="faq-q" type="button" aria-expanded="false">
-            <span>Can I bring a plus-one?</span><span class="faq-icon" aria-hidden="true"></span>
+            <span data-i18n="faq.q6">Can I bring a plus-one?</span><span class="faq-icon" aria-hidden="true"></span>
           </button>
-          <div class="faq-a"><div><p>Your invitation lists everyone it includes. If you're not sure, just ask us. We're happy to help.</p></div></div>
+          <div class="faq-a"><div><p data-i18n="faq.a6">Your invitation lists everyone it includes. If you're not sure, just ask us. We're happy to help.</p></div></div>
         </div>
         <div class="faq-item reveal">
           <button class="faq-q" type="button" aria-expanded="false">
-            <span>What about gifts?</span><span class="faq-icon" aria-hidden="true"></span>
+            <span data-i18n="faq.q7">What about gifts?</span><span class="faq-icon" aria-hidden="true"></span>
           </button>
-          <div class="faq-a"><div><p>No gifts, please. Having you there to celebrate with us is the best gift we could ask for.</p></div></div>
+          <div class="faq-a"><div><p data-i18n="faq.a7">No gifts, please. Having you there to celebrate with us is the best gift we could ask for.</p></div></div>
         </div>
         <div class="faq-item reveal">
           <button class="faq-q" type="button" aria-expanded="false">
-            <span>What will the weather be like?</span><span class="faq-icon" aria-hidden="true"></span>
+            <span data-i18n="faq.q8">What will the weather be like?</span><span class="faq-icon" aria-hidden="true"></span>
           </button>
-          <div class="faq-a"><div><p>Mid-September in Carinthia is usually lovely: warm, sunny days, often around 20–25 °C, with cooler evenings. A light layer for after sunset is a good idea.</p></div></div>
+          <div class="faq-a"><div><p data-i18n="faq.a8">Mid-September in Carinthia is usually lovely: warm, sunny days, often around 20–25 °C, with cooler evenings. A light layer for after sunset is a good idea.</p></div></div>
         </div>
       </div>
     </div>
@@ -387,43 +412,43 @@
   <section class="sheet page--dark" id="contact" aria-labelledby="contact-title">
     <div class="page-inner page-inner--narrow">
       <div class="page-head reveal">
-        <p class="eyebrow"><span class="eyebrow-num">05</span>Contact</p>
-        <h2 id="contact-title" tabindex="-1">Questions? <em>Say hello.</em></h2>
-        <p class="lead">If you need help or have a special request, send us a message here and we'll get back to you.</p>
+        <p class="eyebrow" data-i18n="contact.eyebrow"><span class="eyebrow-num">05</span>Contact</p>
+        <h2 id="contact-title" tabindex="-1" data-i18n="contact.title">Questions? <em>Say hello.</em></h2>
+        <p class="lead" data-i18n="contact.lead">If you need help or have a special request, send us a message here and we'll get back to you.</p>
       </div>
 
       <form class="contact-form reveal" data-contact novalidate>
         <div class="field">
-          <label for="contact-name">Your name</label>
+          <label for="contact-name" data-i18n="contact.name">Your name</label>
           <input id="contact-name" name="name" type="text" autocomplete="name" required>
-          <span class="field-error">Please tell us your name.</span>
+          <span class="field-error" data-i18n="form.nameError">Please tell us your name.</span>
         </div>
         <div class="field">
-          <label for="contact-email">Your email</label>
+          <label for="contact-email" data-i18n="contact.email">Your email</label>
           <input id="contact-email" name="email" type="email" autocomplete="email" inputmode="email" required>
-          <span class="field-error">Please enter a valid email so we can reply.</span>
+          <span class="field-error" data-i18n="contact.emailError">Please enter a valid email so we can reply.</span>
         </div>
         <div class="field field-full">
-          <label for="contact-message">Message</label>
+          <label for="contact-message" data-i18n="contact.message">Message</label>
           <textarea id="contact-message" name="message" rows="5" required></textarea>
-          <span class="field-error">Please write a message.</span>
+          <span class="field-error" data-i18n="contact.messageError">Please write a message.</span>
         </div>
         <!-- Spam trap: real people never see or fill this -->
         <input class="contact-trap" type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" aria-hidden="true">
-        <button class="btn btn-gold contact-submit" type="submit">Send message</button>
+        <button class="btn btn-gold contact-submit" type="submit" data-i18n="contact.send">Send message</button>
         <p class="contact-status" data-contact-status role="status" aria-live="polite"></p>
       </form>
     </div>
   </section>
 
   <div class="fly-gap fly-end" data-fly-target="overview">
-    <p class="fly-end-text">That's the whole range</p>
-    <a class="btn btn-gold fly-end-btn" href="#home">Back to the start ↑</a>
+    <a class="btn btn-gold fly-end-btn" href="#home" data-i18n="end.back">Back to the start ↑</a>
   </div>
 
   <div class="toast" role="status" aria-live="polite" data-toast></div>
   <canvas class="confetti" aria-hidden="true" data-confetti></canvas>
 
+  <script src="translations.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
