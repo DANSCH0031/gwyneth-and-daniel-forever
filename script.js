@@ -208,7 +208,7 @@ document.querySelectorAll('[data-copy]').forEach((button) => {
   button.addEventListener('click', async () => {
     try {
       await navigator.clipboard.writeText(button.dataset.copy);
-      showToast('Email address copied ✓');
+      showToast(button.dataset.copyLabel || 'Copied ✓');
     } catch {
       showToast(button.dataset.copy);
     }

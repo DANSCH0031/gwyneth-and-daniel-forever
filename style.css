@@ -1438,3 +1438,44 @@ body.menu-open {
   20%, 60% { transform: translateX(-6px); }
   40%, 80% { transform: translateX(6px); }
 }
+
+/* FAQ extras: links and copyable booking code */
+.faq-a p + p,
+.faq-a .faq-code + p {
+  margin-top: -8px;
+}
+.faq-a a {
+  color: var(--lake-deep);
+  font-weight: 600;
+}
+.faq-code {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: 0 22px 22px;
+  padding: 10px 10px 10px 18px;
+  border: 1.5px dashed rgba(27, 128, 136, 0.4);
+  border-radius: 14px;
+  background: rgba(27, 128, 136, 0.06);
+}
+.faq-code code {
+  flex: 1;
+  font: 600 1.05rem/1.2 var(--font-sans);
+  letter-spacing: 0.12em;
+  color: var(--lake-deep);
+  word-break: break-all;
+}
+.faq-code-btn {
+  min-height: 40px;
+  padding: 8px 16px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--lake);
+  color: #fff;
+  font: 600 0.88rem var(--font-sans);
+  cursor: pointer;
+}
+.faq-code-btn:active {
+  transform: scale(0.96);
+}
