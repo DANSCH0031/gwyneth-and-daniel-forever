@@ -89,9 +89,57 @@
       </div>
     </div>
 
-    <a class="scroll-cue" href="#info" aria-label="Scroll to information">
-      <span class="scroll-cue-line"></span>
-    </a>
+    <!-- Mountain panorama: each peak is a section of the site -->
+    <nav class="panorama" aria-label="Explore the sections" data-panorama>
+      <svg class="ridge ridge-far" viewBox="0 0 1440 200" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 200 L0 118 L90 84 L170 108 L260 62 L350 98 L440 52 L540 94 L620 70 L720 34 L810 84 L900 56 L990 94 L1080 46 L1170 88 L1260 60 L1350 98 L1440 70 L1440 200 Z"/>
+      </svg>
+      <svg class="ridge ridge-near" viewBox="0 0 1440 200" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 200 L0 150 L110 122 L200 140 L300 106 L400 134 L520 100 L640 140 L760 112 L880 144 L1000 116 L1110 140 L1230 106 L1340 134 L1440 120 L1440 200 Z"/>
+      </svg>
+      <div class="peaks">
+        <a class="peak" href="#info" style="--h: 52%; --i: 0">
+          <span class="peak-flag"><span class="peak-pill"><span class="peak-num">01</span><span class="peak-label">Information</span><span class="peak-label-short">Info</span></span><span class="peak-pole"></span></span>
+          <svg class="peak-shape" viewBox="0 0 200 160" preserveAspectRatio="none" aria-hidden="true">
+            <path class="peak-rock" d="M0 160 L70 40 L88 52 L100 20 L116 46 L130 38 L200 160 Z"/>
+            <path class="peak-shade" d="M100 20 L116 46 L130 38 L200 160 L112 160 L106 92 Z"/>
+            <path class="peak-snow" d="M61 55 L70 40 L88 52 L100 20 L116 46 L130 38 L140 55 L128 60 L118 54 L108 66 L98 58 L86 66 L74 58 Z"/>
+          </svg>
+        </a>
+        <a class="peak" href="#schedule" style="--h: 64%; --i: 1">
+          <span class="peak-flag"><span class="peak-pill"><span class="peak-num">02</span><span class="peak-label">Schedule</span><span class="peak-label-short">Schedule</span></span><span class="peak-pole"></span></span>
+          <svg class="peak-shape" viewBox="0 0 200 160" preserveAspectRatio="none" aria-hidden="true">
+            <path class="peak-rock" d="M0 160 L74 36 L90 48 L100 20 L112 42 L128 34 L200 160 Z"/>
+            <path class="peak-shade" d="M100 20 L112 42 L128 34 L200 160 L118 160 L104 88 Z"/>
+            <path class="peak-snow" d="M65 51 L74 36 L90 48 L100 20 L112 42 L128 34 L138 52 L126 58 L116 50 L106 64 L96 56 L84 64 L76 56 Z"/>
+          </svg>
+        </a>
+        <a class="peak" href="#rsvp" style="--h: 74%; --i: 2">
+          <span class="peak-flag"><span class="peak-pill"><span class="peak-num">03</span><span class="peak-label">RSVP</span><span class="peak-label-short">RSVP</span></span><span class="peak-pole"></span></span>
+          <svg class="peak-shape" viewBox="0 0 200 160" preserveAspectRatio="none" aria-hidden="true">
+            <path class="peak-rock" d="M0 160 L66 46 L84 54 L100 20 L118 50 L134 42 L200 160 Z"/>
+            <path class="peak-shade" d="M100 20 L118 50 L134 42 L200 160 L108 160 L108 96 Z"/>
+            <path class="peak-snow" d="M58 60 L66 46 L84 54 L100 20 L118 50 L134 42 L143 58 L130 64 L120 58 L110 70 L100 62 L88 70 L72 62 Z"/>
+          </svg>
+        </a>
+        <a class="peak" href="#faqs" style="--h: 60%; --i: 3">
+          <span class="peak-flag"><span class="peak-pill"><span class="peak-num">04</span><span class="peak-label">FAQs</span><span class="peak-label-short">FAQs</span></span><span class="peak-pole"></span></span>
+          <svg class="peak-shape" viewBox="0 0 200 160" preserveAspectRatio="none" aria-hidden="true">
+            <path class="peak-rock" d="M0 160 L72 42 L86 50 L100 20 L114 44 L132 40 L200 160 Z"/>
+            <path class="peak-shade" d="M100 20 L114 44 L132 40 L200 160 L114 160 L104 90 Z"/>
+            <path class="peak-snow" d="M63 57 L72 42 L86 50 L100 20 L114 44 L132 40 L141 56 L128 61 L118 54 L108 66 L98 58 L86 66 L74 58 Z"/>
+          </svg>
+        </a>
+        <a class="peak" href="#contact" style="--h: 48%; --i: 4">
+          <span class="peak-flag"><span class="peak-pill"><span class="peak-num">05</span><span class="peak-label">Contact</span><span class="peak-label-short">Contact</span></span><span class="peak-pole"></span></span>
+          <svg class="peak-shape" viewBox="0 0 200 160" preserveAspectRatio="none" aria-hidden="true">
+            <path class="peak-rock" d="M0 160 L70 40 L88 52 L100 20 L116 46 L130 38 L200 160 Z"/>
+            <path class="peak-shade" d="M100 20 L116 46 L130 38 L200 160 L112 160 L106 92 Z"/>
+            <path class="peak-snow" d="M61 55 L70 40 L88 52 L100 20 L116 46 L130 38 L140 55 L128 60 L118 54 L108 66 L98 58 L86 66 L74 58 Z"/>
+          </svg>
+        </a>
+      </div>
+    </nav>
   </section>
 
   <main>
@@ -362,6 +410,8 @@
   </main>
 
   <footer class="footer">
+    <!-- Filled by script.js with a copy of the hero's mountain panorama -->
+    <nav class="panorama panorama--footer" aria-label="Jump to a section" data-panorama-copy></nav>
     <p class="footer-brand">G<em>&amp;</em>D</p>
     <p>Made with love · <a href="#top">Back to top ↑</a></p>
   </footer>

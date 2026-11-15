@@ -416,3 +416,21 @@ if (contactForm) {
     }
   });
 }
+
+/* ---------- Mountain panorama ---------- */
+const panorama = document.querySelector('[data-panorama]');
+const footerPanorama = document.querySelector('[data-panorama-copy]');
+
+// Reuse the hero mountains in the footer so guests can jump anywhere from the bottom
+if (panorama && footerPanorama) {
+  footerPanorama.innerHTML = panorama.innerHTML;
+}
+
+// Ridges drift with the mouse for a sense of depth (laptops only)
+if (panorama && finePointer && !reduceMotion) {
+  hero.addEventListener('pointermove', (event) => {
+    const x = (event.clientX / window.innerWidth - 0.5) * -40;
+    panorama.style.setProperty('--mx', `${x}px`);
+  });
+  hero.addEventListener('pointerleave', () => panorama.style.setProperty('--mx', '0px'));
+}

@@ -26,6 +26,7 @@
 
   --gutter: clamp(16px, 5vw, 40px);
   --nav-h: 68px;
+  --pano-h: clamp(170px, 30vh, 300px);
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -439,7 +440,7 @@ body.menu-open {
   min-height: 100svh;
   display: grid;
   place-items: center;
-  padding: calc(var(--nav-h) + 24px) var(--gutter) 110px;
+  padding: calc(var(--nav-h) + 24px) var(--gutter) calc(var(--pano-h) + 12px);
   color: #fff;
   text-align: center;
   overflow: hidden;
@@ -468,7 +469,7 @@ body.menu-open {
   z-index: -1;
   background:
     radial-gradient(ellipse at 50% 45%, rgba(16, 35, 45, 0.15), rgba(16, 35, 45, 0.55) 70%),
-    linear-gradient(180deg, rgba(16, 35, 45, 0.55) 0%, rgba(16, 35, 45, 0.1) 35%, rgba(16, 35, 45, 0.35) 70%, var(--cream) 100%);
+    linear-gradient(180deg, rgba(16, 35, 45, 0.55) 0%, rgba(16, 35, 45, 0.1) 35%, rgba(16, 35, 45, 0.3) 60%, rgba(16, 35, 45, 0.55) 100%);
 }
 
 .hero-content {
@@ -1559,4 +1560,278 @@ body.menu-open {
 }
 .contact-status.is-error {
   color: #ffb8a8;
+}
+
+/* =========================================================
+   Mountain theme
+   ========================================================= */
+
+/* ---------- Panorama navigation (hero + footer) ---------- */
+.panorama {
+  --peak: var(--cream);
+  --peak-shade: #ece2d3;
+  --snow: #ffffff;
+  --glow: #f6c27f;
+  --ridge-far: rgba(248, 243, 236, 0.28);
+  --ridge-near: rgba(248, 243, 236, 0.55);
+  --pill-bg: rgba(16, 35, 45, 0.45);
+  --pill-fg: #ffffff;
+  --pole: rgba(255, 255, 255, 0.75);
+  --mx: 0px;
+
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: var(--pano-h);
+  pointer-events: none;
+  overflow-x: clip; /* edge peaks hang over the sides; never cause sideways scrolling */
+}
+
+.ridge {
+  position: absolute;
+  left: -5%;
+  width: 110%;
+  bottom: 0;
+  transition: transform 0.9s var(--ease-out);
+}
+.ridge-far {
+  height: 88%;
+  fill: var(--ridge-far);
+  transform: translateX(calc(var(--mx) * 0.4));
+}
+.ridge-near {
+  height: 62%;
+  fill: var(--ridge-near);
+  transform: translateX(calc(var(--mx) * 0.8));
+}
+
+.peaks {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.peak {
+  position: relative;
+  height: 100%;
+  margin: 0 -26%;
+  pointer-events: none; /* only the mountain shape and its flag are clickable */
+  text-decoration: none;
+  outline: none;
+}
+.peak:nth-child(1),
+.peak:nth-child(5) { z-index: 3; }
+.peak:nth-child(2),
+.peak:nth-child(4) { z-index: 2; }
+.peak:nth-child(3) { z-index: 1; }
+.peak:hover,
+.peak:focus-visible {
+  z-index: 5;
+}
+
+.peak-shape {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: var(--h);
+  overflow: visible;
+  transition: transform 0.6s var(--ease-out);
+}
+.peak-rock {
+  fill: var(--peak);
+  pointer-events: visiblePainted;
+  cursor: pointer;
+}
+.peak-shade {
+  fill: var(--peak-shade);
+  pointer-events: none;
+}
+.peak-snow {
+  fill: var(--snow);
+  pointer-events: none;
+  transition: fill 0.5s;
+}
+
+.peak-flag {
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--h) * 0.875 - 1px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: translateX(-50%);
+  pointer-events: auto;
+  cursor: pointer;
+  transition: transform 0.6s var(--ease-out);
+}
+.peak-pill {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 7px 13px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: var(--pill-bg);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--pill-fg);
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background 0.4s, color 0.4s, border-color 0.4s, box-shadow 0.4s;
+}
+.peak-num {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  color: var(--gold);
+  transition: color 0.4s;
+}
+.peak-label-short {
+  display: none;
+}
+.peak-pole {
+  width: 1.5px;
+  height: 16px;
+  background: var(--pole);
+  transition: height 0.6s var(--ease-out);
+}
+
+/* Hover / keyboard focus: the peak rises and catches the alpenglow */
+.peak:hover .peak-shape,
+.peak:focus-visible .peak-shape {
+  transform: translateY(-8px);
+}
+.peak:hover .peak-flag,
+.peak:focus-visible .peak-flag {
+  transform: translate(-50%, -8px);
+}
+.peak:hover .peak-pole,
+.peak:focus-visible .peak-pole {
+  height: 30px;
+}
+.peak:hover .peak-snow,
+.peak:focus-visible .peak-snow {
+  fill: var(--glow);
+}
+.peak:hover .peak-pill,
+.peak:focus-visible .peak-pill {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: #1d1208;
+  box-shadow: 0 10px 24px -8px rgba(224, 154, 79, 0.9);
+}
+.peak:hover .peak-num,
+.peak:focus-visible .peak-num {
+  color: #1d1208;
+}
+
+/* Hero entrance: the range rises out of the valley */
+/* (animations only touch the wrapper / opacity so hover lifts and parallax still work) */
+.hero .peak {
+  animation: peak-rise 1.3s var(--ease-out) both;
+  animation-delay: calc(0.5s + var(--i) * 0.1s);
+}
+.hero .peak-flag {
+  animation: fade-in 0.8s ease-out both;
+  animation-delay: calc(1.3s + var(--i) * 0.1s);
+}
+.hero .ridge {
+  animation: fade-in 1.4s ease-out both;
+  animation-delay: 0.3s;
+}
+@keyframes peak-rise {
+  from { transform: translateY(105%); }
+  to { transform: none; }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Phones: shorter labels */
+@media (max-width: 640px) {
+  .peak-label {
+    display: none;
+  }
+  .peak-label-short {
+    display: inline;
+  }
+  .peak-pill {
+    padding: 5px 9px;
+    font-size: 0.72rem;
+  }
+  .peak-pole {
+    height: 12px;
+  }
+}
+@media (max-width: 420px) {
+  .peak-num {
+    display: none;
+  }
+}
+
+/* ---------- Footer panorama ---------- */
+.footer {
+  padding-top: 0;
+  background: var(--sand);
+}
+.panorama--footer {
+  --peak: var(--sand);
+  --peak-shade: #e2d4bf;
+  --snow: #fffdf9;
+  --glow: var(--gold);
+  --ridge-far: rgba(27, 128, 136, 0.1);
+  --ridge-near: rgba(239, 229, 214, 0.75);
+  --pill-bg: var(--paper);
+  --pill-fg: var(--ink);
+  --pole: rgba(16, 35, 45, 0.35);
+  --pano-h: clamp(150px, 22vw, 230px);
+
+  position: relative;
+  bottom: auto;
+  margin: 0 calc(var(--gutter) * -1) 24px;
+  background: var(--cream);
+}
+.panorama--footer .peak-pill {
+  border-color: var(--line);
+  box-shadow: 0 6px 16px -8px rgba(16, 35, 45, 0.3);
+}
+
+/* ---------- Mountain ridges around the dark Schedule section ---------- */
+.section-dark {
+  margin-top: 70px;
+  padding-bottom: calc(clamp(80px, 12vw, 140px) + 60px);
+}
+.section-dark::before,
+.section-dark::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 72px;
+  background-size: 100% 100%;
+  pointer-events: none;
+}
+.section-dark::before {
+  top: -71px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 80' preserveAspectRatio='none'%3E%3Cpath fill='%2310232d' d='M0 80 L0 50 L120 22 L220 54 L340 10 L470 60 L560 32 L690 64 L800 14 L930 56 L1040 26 L1170 60 L1290 20 L1440 52 L1440 80 Z'/%3E%3C/svg%3E");
+}
+.section-dark::after {
+  bottom: -1px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 80' preserveAspectRatio='none'%3E%3Cpath fill='%23f8f3ec' d='M0 80 L0 40 L140 64 L260 24 L380 58 L500 16 L620 52 L760 28 L880 62 L1010 18 L1130 56 L1250 30 L1360 60 L1440 36 L1440 80 Z'/%3E%3C/svg%3E");
+}
+
+/* The timeline becomes a dashed hiking trail */
+.timeline::before {
+  background: repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.28) 0 7px, transparent 7px 14px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ridge {
+    transform: none;
+  }
 }
