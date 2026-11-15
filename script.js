@@ -1,3 +1,13 @@
+/* =========================================================
+   Gwyneth & Daniel — interactions
+   The landing page is a mountain panorama; each peak opens a page.
+   ========================================================= */
+
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+const CONTACT_EMAIL = 'schoellenberger@me.com';
+const SITE_TITLE = document.title;
+
 /* ---------- Password gate ---------- */
 // Only a SHA-256 fingerprint of the password is stored here, not the password itself.
 const GATE_HASH = '00a15bc830cbc98e7f401edd157cdf131b077807743a64c3accc3ffd4910156d';
@@ -17,8 +27,7 @@ if (document.documentElement.classList.contains('locked')) {
     if ((await sha256(input.value.trim())) === GATE_HASH) {
       try { localStorage.setItem('gd-unlocked', '1'); } catch (e) { /* stays unlocked until reload */ }
       document.documentElement.classList.remove('locked');
-      window.scrollTo(0, 0);
-      window.dispatchEvent(new Event('scroll'));
+      updatePanorama();
     } else {
       error.hidden = false;
       input.select();
@@ -29,105 +38,112 @@ if (document.documentElement.classList.contains('locked')) {
   });
 }
 
-/* =========================================================
-   Gwyneth & Daniel — interactions
-   ========================================================= */
+/* ---------- Pages: open with a peak, close with "Back to the mountains" ---------- */
+const pages = Array.from(document.querySelectorAll('[data-page]'));
+const PAGE_SPEED = reduceMotion ? 0 : 750;
+let pageLayer = 0;
+let currentPage = null;
+let lastTrigger = null;
 
-const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-const CONTACT_EMAIL = 'schoellenberger@me.com';
+pages.forEach((page) => { page.inert = true; });
 
-/* ---------- Navigation: solid on scroll, mobile menu ---------- */
-const nav = document.querySelector('[data-nav]');
-const navToggle = document.querySelector('.nav-toggle');
-const navLinks = Array.from(document.querySelectorAll('.nav-links a'));
+function route(id, { animate = true } = {}) {
+  const target = pages.find((page) => page.id === id);
 
-function setMenu(open) {
-  nav.classList.toggle('is-open', open);
-  document.body.classList.toggle('menu-open', open);
-  navToggle.setAttribute('aria-expanded', String(open));
-  navToggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  if (target) {
+    if (target === currentPage) return;
+    const previous = currentPage;
+    currentPage = target;
+    pageLayer += 1;
+    target.style.zIndex = String(40 + pageLayer);
+    target.classList.toggle('no-anim', !animate);
+    target.scrollTop = 0;
+    target.inert = false;
+    target.classList.add('is-open');
+    document.body.classList.add('page-open');
+    document.title = `${target.querySelector('.page-bar-title').textContent.replace(/^\d+ · /, '')} · ${SITE_TITLE}`;
+
+    // the page we came from slides away underneath once the new one covers it
+    if (previous) {
+      setTimeout(() => {
+        if (currentPage !== previous) {
+          previous.classList.add('no-anim');
+          previous.classList.remove('is-open');
+          previous.inert = true;
+        }
+      }, PAGE_SPEED);
+    }
+    const heading = target.querySelector('h2');
+    setTimeout(() => heading && heading.focus({ preventScroll: true }), animate ? 50 : 0);
+    updateTimeline();
+  } else {
+    if (!currentPage) return;
+    pages.forEach((page) => {
+      page.classList.toggle('no-anim', !animate);
+      page.classList.remove('is-open');
+      page.inert = true;
+    });
+    currentPage = null;
+    document.body.classList.remove('page-open');
+    document.title = SITE_TITLE;
+    if (lastTrigger) lastTrigger.focus({ preventScroll: true });
+  }
 }
 
-navToggle.addEventListener('click', () => setMenu(!nav.classList.contains('is-open')));
-navLinks.forEach((link) => link.addEventListener('click', () => setMenu(false)));
+function go(id) {
+  if (location.hash !== `#${id}`) history.pushState(null, '', `#${id}`);
+  route(id);
+}
+
+// All in-page links (#info, #home, …) go through the router instead of jumping
+document.addEventListener('click', (event) => {
+  const link = event.target.closest('a[href^="#"]');
+  if (!link) return;
+  const id = link.getAttribute('href').slice(1);
+  if (id !== 'home' && !pages.some((page) => page.id === id)) return;
+  event.preventDefault();
+  if (link.classList.contains('peak')) lastTrigger = link;
+  go(id);
+});
+
+window.addEventListener('popstate', () => route(location.hash.slice(1)));
 document.addEventListener('keydown', (event) => {
-  if (event.key === 'Escape' && nav.classList.contains('is-open')) {
-    setMenu(false);
-    navToggle.focus();
-  }
-});
-// Close the full-screen menu if the window grows to laptop size
-window.matchMedia('(min-width: 861px)').addEventListener('change', (event) => {
-  if (event.matches) setMenu(false);
+  if (event.key === 'Escape' && currentPage) go('home');
 });
 
-/* ---------- Scroll effects (nav, progress bar, hero parallax, timeline) ---------- */
-const progressBar = document.querySelector('.scroll-progress span');
-const hero = document.querySelector('.hero');
-const heroMedia = document.querySelector('.hero-media');
-const timeline = document.querySelector('[data-timeline]');
-const timelineItems = timeline ? Array.from(timeline.querySelectorAll('.timeline-item')) : [];
-let ticking = false;
 
-function onScroll() {
-  const y = window.scrollY;
-  const max = document.documentElement.scrollHeight - window.innerHeight;
+/* ---------- Panorama: swipe on phones, dots show where you are ---------- */
+const panorama = document.querySelector('.panorama');
+const scroller = document.querySelector('[data-pano-scroller]');
+const snaps = Array.from(document.querySelectorAll('.pano-snap'));
+const dots = Array.from(document.querySelectorAll('[data-pano-dots] button'));
 
-  nav.classList.toggle('is-scrolled', y > hero.offsetHeight - 80);
-  progressBar.style.setProperty('--progress', max > 0 ? (y / max).toFixed(4) : 0);
-
-  if (!reduceMotion && y < hero.offsetHeight) {
-    heroMedia.style.setProperty('--py', `${y * 0.25}px`);
-  }
-
-  if (timeline) {
-    const rect = timeline.getBoundingClientRect();
-    const marker = window.innerHeight * 0.6; // line fills up to 60% down the screen
-    const progress = Math.min(Math.max((marker - rect.top) / rect.height, 0), 1);
-    timeline.style.setProperty('--progress', progress.toFixed(4));
-    timelineItems.forEach((item) => {
-      const dot = item.querySelector('.timeline-dot').getBoundingClientRect();
-      item.classList.toggle('is-passed', dot.top < marker);
-    });
-  }
-  ticking = false;
+function snapLeft(i) {
+  return snaps[i].offsetLeft - scroller.clientWidth / 2;
 }
 
-window.addEventListener('scroll', () => {
-  if (!ticking) {
-    window.requestAnimationFrame(onScroll);
-    ticking = true;
-  }
-}, { passive: true });
-window.addEventListener('resize', onScroll);
-onScroll();
-
-/* Hero image drifts slightly with the mouse (laptops only) */
-if (finePointer && !reduceMotion) {
-  hero.addEventListener('pointermove', (event) => {
-    const x = (event.clientX / window.innerWidth - 0.5) * -24;
-    heroMedia.style.setProperty('--px', `${x}px`);
+function updatePanorama() {
+  const scrollable = scroller.scrollWidth > scroller.clientWidth + 2;
+  panorama.classList.toggle('is-scrollable', scrollable);
+  if (!scrollable) return;
+  const center = scroller.scrollLeft + scroller.clientWidth / 2;
+  let nearest = 0;
+  snaps.forEach((snap, i) => {
+    if (Math.abs(snap.offsetLeft - center) < Math.abs(snaps[nearest].offsetLeft - center)) nearest = i;
   });
-  hero.addEventListener('pointerleave', () => heroMedia.style.setProperty('--px', '0px'));
+  dots.forEach((dot, i) => dot.classList.toggle('is-active', i === nearest));
 }
 
-/* ---------- Highlight the current section in the menu ---------- */
-const sections = navLinks
-  .map((link) => document.querySelector(link.getAttribute('href')))
-  .filter(Boolean);
-
-const sectionObserver = new IntersectionObserver((entries) => {
-  entries.forEach((entry) => {
-    if (!entry.isIntersecting) return;
-    navLinks.forEach((link) => {
-      link.classList.toggle('is-current', link.getAttribute('href') === `#${entry.target.id}`);
-    });
+dots.forEach((dot, i) => {
+  dot.addEventListener('click', () => {
+    scroller.scrollTo({ left: snapLeft(i), behavior: reduceMotion ? 'auto' : 'smooth' });
   });
-}, { rootMargin: '-45% 0px -50% 0px' });
-sections.forEach((section) => sectionObserver.observe(section));
+});
+scroller.addEventListener('scroll', () => requestAnimationFrame(updatePanorama), { passive: true });
+window.addEventListener('resize', updatePanorama);
+updatePanorama();
 
-/* ---------- Reveal elements as they scroll into view ---------- */
+/* ---------- Reveal page content as it scrolls into view ---------- */
 const revealObserver = new IntersectionObserver((entries) => {
   entries.forEach((entry) => {
     if (entry.isIntersecting) {
@@ -138,12 +154,32 @@ const revealObserver = new IntersectionObserver((entries) => {
 }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
 document.querySelectorAll('.reveal').forEach((el) => revealObserver.observe(el));
 
+/* ---------- Schedule: the trail fills in as you scroll ---------- */
+const schedulePage = document.getElementById('schedule');
+const timeline = document.querySelector('[data-timeline]');
+const timelineItems = timeline ? Array.from(timeline.querySelectorAll('.timeline-item')) : [];
+
+function updateTimeline() {
+  if (!timeline) return;
+  const rect = timeline.getBoundingClientRect();
+  const marker = window.innerHeight * 0.6;
+  const progress = Math.min(Math.max((marker - rect.top) / rect.height, 0), 1);
+  timeline.style.setProperty('--progress', progress.toFixed(4));
+  timelineItems.forEach((item) => {
+    const dot = item.querySelector('.timeline-dot').getBoundingClientRect();
+    item.classList.toggle('is-passed', dot.top < marker);
+  });
+}
+if (schedulePage) {
+  schedulePage.addEventListener('scroll', () => requestAnimationFrame(updateTimeline), { passive: true });
+  schedulePage.addEventListener('transitionend', updateTimeline);
+}
+
 /* ---------- Countdown ---------- */
 const countdown = document.querySelector('[data-countdown]');
 const weddingDate = countdown && countdown.dataset.date ? new Date(countdown.dataset.date) : null;
 
 if (weddingDate && !Number.isNaN(weddingDate.getTime())) {
-  countdown.classList.add('is-live');
   const units = {
     days: countdown.querySelector('[data-unit="days"]'),
     hours: countdown.querySelector('[data-unit="hours"]'),
@@ -151,7 +187,6 @@ if (weddingDate && !Number.isNaN(weddingDate.getTime())) {
     seconds: countdown.querySelector('[data-unit="seconds"]'),
   };
   const pad = (n) => String(n).padStart(2, '0');
-
   const update = () => {
     const diff = Math.max(weddingDate - Date.now(), 0);
     const s = Math.floor(diff / 1000);
@@ -203,7 +238,7 @@ function showToast(message) {
   toastTimer = setTimeout(() => toast.classList.remove('is-visible'), 2600);
 }
 
-/* ---------- Copy email ---------- */
+/* ---------- Copy buttons (booking code) ---------- */
 document.querySelectorAll('[data-copy]').forEach((button) => {
   button.addEventListener('click', async () => {
     try {
@@ -417,20 +452,5 @@ if (contactForm) {
   });
 }
 
-/* ---------- Mountain panorama ---------- */
-const panorama = document.querySelector('[data-panorama]');
-const footerPanorama = document.querySelector('[data-panorama-copy]');
-
-// Reuse the hero mountains in the footer so guests can jump anywhere from the bottom
-if (panorama && footerPanorama) {
-  footerPanorama.innerHTML = panorama.innerHTML;
-}
-
-// Ridges drift with the mouse for a sense of depth (laptops only)
-if (panorama && finePointer && !reduceMotion) {
-  hero.addEventListener('pointermove', (event) => {
-    const x = (event.clientX / window.innerWidth - 0.5) * -40;
-    panorama.style.setProperty('--mx', `${x}px`);
-  });
-  hero.addEventListener('pointerleave', () => panorama.style.setProperty('--mx', '0px'));
-}
+/* ---------- Start: opening the site with e.g. /#rsvp shows that page straight away ---------- */
+route(location.hash.slice(1), { animate: false });
