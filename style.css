@@ -526,6 +526,14 @@ body.menu-open {
   font-size: 0.8em;
 }
 
+.hero-date {
+  margin-bottom: 6px;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.3rem, 3.6vw, 1.8rem);
+  color: #ffd9ad;
+}
+
 .hero-place {
   font-size: clamp(0.95rem, 2.4vw, 1.15rem);
   color: rgba(255, 255, 255, 0.9);
