@@ -2,83 +2,306 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Card Deck</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Gwyneth &amp; Daniel</title>
+  <meta name="description" content="Gwyneth &amp; Daniel are getting married in Carinthia, Austria. Find the venues, schedule, FAQs and RSVP here.">
+  <meta name="theme-color" content="#10232d">
+  <script>document.documentElement.classList.add('js');</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Instrument+Sans:wght@400..600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="nav">
+  <a class="skip-link" href="#info">Skip to content</a>
+  <div class="scroll-progress" aria-hidden="true"><span></span></div>
+
+  <!-- ============ NAVIGATION ============ -->
+  <header class="nav" data-nav>
     <div class="nav-inner">
-      <div class="nav-brand">G&amp;D</div>
-      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links">
-        <span class="nav-toggle-bar"></span>
-        <span class="nav-toggle-bar"></span>
-        <span class="nav-toggle-bar"></span>
-      </button>
-      <nav class="nav-links" id="nav-links">
-        <a href="#info">Information</a>
-        <a href="#rsvp">RSVP</a>
-        <a href="#faqs">FAQs</a>
-        <a href="#contact">Contact</a>
-        <a href="#schedule">Schedule</a>
+      <a class="nav-brand" href="#top" aria-label="Back to top">G<em>&amp;</em>D</a>
+      <nav class="nav-links" id="nav-links" aria-label="Main">
+        <a href="#info"><span class="nav-num">01</span>Information</a>
+        <a href="#schedule"><span class="nav-num">02</span>Schedule</a>
+        <a href="#rsvp"><span class="nav-num">03</span>RSVP</a>
+        <a href="#faqs"><span class="nav-num">04</span>FAQs</a>
+        <a href="#contact"><span class="nav-num">05</span>Contact</a>
       </nav>
+      <a class="nav-cta" href="#rsvp">RSVP</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Open menu">
+        <span></span><span></span>
+      </button>
     </div>
   </header>
-  <main class="deck">
-    <div class="card-stack">
-      <article class="card is-active" data-index="0" id="info">
-        <div class="card-logo">G&amp;D</div>
-        <h2>Information</h2>
-        <div class="card-body">
-          <div class="info-images">
-            <figure class="info-figure">
-              <img class="info-image" src="sternberg.jpg" alt="Pfarrhaus Sternberg">
-              <figcaption>Pfarrhaus Sternberg</figcaption>
-            </figure>
-            <figure class="info-figure">
-              <img class="info-image" src="inselhotel.jpg" alt="Inselhotel Faaker See">
-              <figcaption>Inselhotel Faaker See</figcaption>
-              <a class="info-link" href="https://inselhotel.at" target="_blank" rel="noopener">Visit website</a>
-            </figure>
+
+  <!-- ============ HERO ============ -->
+  <section class="hero" id="top">
+    <div class="hero-media" aria-hidden="true">
+      <img src="sternberg.jpg" alt="" width="2048" height="1366" fetchpriority="high">
+    </div>
+    <div class="hero-shade" aria-hidden="true"></div>
+
+    <div class="hero-content">
+      <p class="eyebrow hero-in" style="--d: 0.1s">We're getting married</p>
+      <h1 class="hero-title">
+        <span class="hero-name hero-in" style="--d: 0.25s">Gwyneth</span>
+        <span class="hero-amp hero-in" style="--d: 0.45s">&amp;</span>
+        <span class="hero-name hero-in" style="--d: 0.6s">Daniel</span>
+      </h1>
+      <p class="hero-place hero-in" style="--d: 0.8s">Sternberg &amp; Faaker See · Carinthia, Austria</p>
+
+      <!-- Set the wedding date in data-date, e.g. data-date="2027-06-12T14:00:00" -->
+      <div class="countdown hero-in" style="--d: 0.95s" data-countdown data-date="">
+        <div class="countdown-unit"><span class="countdown-num" data-unit="days">–</span><span class="countdown-label">Days</span></div>
+        <div class="countdown-unit"><span class="countdown-num" data-unit="hours">–</span><span class="countdown-label">Hours</span></div>
+        <div class="countdown-unit"><span class="countdown-num" data-unit="minutes">–</span><span class="countdown-label">Minutes</span></div>
+        <div class="countdown-unit"><span class="countdown-num" data-unit="seconds">–</span><span class="countdown-label">Seconds</span></div>
+        <p class="countdown-note">Date announcement coming soon</p>
+      </div>
+
+      <div class="hero-actions hero-in" style="--d: 1.1s">
+        <a class="btn btn-gold" href="#rsvp">RSVP now</a>
+        <a class="btn btn-glass" href="#info">See the details</a>
+      </div>
+    </div>
+
+    <a class="scroll-cue" href="#info" aria-label="Scroll to information">
+      <span class="scroll-cue-line"></span>
+    </a>
+  </section>
+
+  <main>
+    <!-- ============ INFORMATION ============ -->
+    <section class="section" id="info">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="eyebrow"><span class="eyebrow-num">01</span>Information</p>
+          <h2>Where it all <em>happens</em></h2>
+          <p class="lead">Two of our favourite places in Carinthia: a church on a hilltop and a hotel on an island in the lake.</p>
+        </div>
+
+        <div class="venues">
+          <article class="venue reveal" data-tilt>
+            <div class="venue-media">
+              <img src="sternberg.jpg" alt="The white church and parsonage of Sternberg on a wooded hilltop at sunset" width="2048" height="1366" loading="lazy">
+              <span class="venue-tag">Venue 1</span>
+            </div>
+            <div class="venue-body">
+              <h3>Pfarrhaus Sternberg</h3>
+              <p>A white church above the valley, with views over the mountains.</p>
+              <div class="venue-links">
+                <a class="link-arrow" href="https://www.google.com/maps/search/?api=1&amp;query=Pfarrhaus+Sternberg+K%C3%A4rnten" target="_blank" rel="noopener">Open in Maps</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="venue reveal" style="--d: 0.12s" data-tilt>
+            <div class="venue-media">
+              <img src="Inselhotel.jpg" alt="Aerial view of the Inselhotel on its green island in the turquoise Faaker See" width="1024" height="683" loading="lazy">
+              <span class="venue-tag">Venue 2</span>
+            </div>
+            <div class="venue-body">
+              <h3>Inselhotel Faaker See</h3>
+              <p>A small island surrounded by the turquoise water of Faaker See.</p>
+              <div class="venue-links">
+                <a class="link-arrow" href="https://inselhotel.at" target="_blank" rel="noopener">Visit website</a>
+                <a class="link-arrow" href="https://www.google.com/maps/search/?api=1&amp;query=Inselhotel+Faaker+See" target="_blank" rel="noopener">Open in Maps</a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SCHEDULE ============ -->
+    <section class="section section-dark" id="schedule">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="eyebrow"><span class="eyebrow-num">02</span>Schedule</p>
+          <h2>The day, <em>step by step</em></h2>
+          <p class="lead">Exact times will be added here closer to the day.</p>
+        </div>
+
+        <ol class="timeline" data-timeline>
+          <li class="timeline-item reveal">
+            <span class="timeline-dot" aria-hidden="true"></span>
+            <div class="timeline-card">
+              <span class="timeline-time">Time TBA</span>
+              <h3>Guests arrive</h3>
+              <p>Find your seat and say hello.</p>
+            </div>
+          </li>
+          <li class="timeline-item reveal">
+            <span class="timeline-dot" aria-hidden="true"></span>
+            <div class="timeline-card">
+              <span class="timeline-time">Time TBA</span>
+              <h3>Ceremony</h3>
+              <p>The moment we say “yes”.</p>
+            </div>
+          </li>
+          <li class="timeline-item reveal">
+            <span class="timeline-dot" aria-hidden="true"></span>
+            <div class="timeline-card">
+              <span class="timeline-time">Time TBA</span>
+              <h3>Drinks &amp; photos</h3>
+              <p>Toasts, hugs and lots of pictures.</p>
+            </div>
+          </li>
+          <li class="timeline-item reveal">
+            <span class="timeline-dot" aria-hidden="true"></span>
+            <div class="timeline-card">
+              <span class="timeline-time">Time TBA</span>
+              <h3>Dinner</h3>
+              <p>Good food, good company, and a few speeches.</p>
+            </div>
+          </li>
+          <li class="timeline-item reveal">
+            <span class="timeline-dot" aria-hidden="true"></span>
+            <div class="timeline-card">
+              <span class="timeline-time">Time TBA</span>
+              <h3>Party</h3>
+              <p>Dancing until late.</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ============ RSVP ============ -->
+    <section class="section" id="rsvp">
+      <div class="container container-narrow">
+        <div class="section-head reveal">
+          <p class="eyebrow"><span class="eyebrow-num">03</span>RSVP</p>
+          <h2>Will you <em>join us?</em></h2>
+          <p class="lead">Let us know if you can come. When you press send, your email app opens with your answer filled in.</p>
+        </div>
+
+        <div class="rsvp-card reveal">
+          <form class="rsvp-form" data-rsvp novalidate>
+            <div class="field">
+              <label for="rsvp-name">Your name(s)</label>
+              <input id="rsvp-name" name="name" type="text" autocomplete="name" placeholder="e.g. Anna &amp; Max Muster" required>
+              <span class="field-error">Please tell us your name.</span>
+            </div>
+
+            <fieldset class="field">
+              <legend>Can you come?</legend>
+              <div class="choice">
+                <label class="choice-option">
+                  <input type="radio" name="attending" value="yes" required>
+                  <span><b>Joyfully accept</b><small>Can't wait!</small></span>
+                </label>
+                <label class="choice-option">
+                  <input type="radio" name="attending" value="no">
+                  <span><b>Regretfully decline</b><small>We'll miss you</small></span>
+                </label>
+              </div>
+              <span class="field-error">Please choose one.</span>
+            </fieldset>
+
+            <div class="rsvp-extra" data-rsvp-extra>
+              <div class="rsvp-extra-inner">
+                <div class="field">
+                  <label for="rsvp-guests">Number of guests (including you)</label>
+                  <div class="stepper">
+                    <button type="button" class="stepper-btn" data-step="-1" aria-label="One fewer guest">−</button>
+                    <input id="rsvp-guests" name="guests" type="number" min="1" max="10" value="1" inputmode="numeric">
+                    <button type="button" class="stepper-btn" data-step="1" aria-label="One more guest">+</button>
+                  </div>
+                </div>
+                <div class="field">
+                  <label for="rsvp-diet">Dietary needs or allergies</label>
+                  <input id="rsvp-diet" name="diet" type="text" placeholder="Vegetarian, gluten-free, none…">
+                </div>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="rsvp-message">A note for us <span class="optional">(optional)</span></label>
+              <textarea id="rsvp-message" name="message" rows="3" placeholder="Song requests, wishes, anything you like…"></textarea>
+            </div>
+
+            <button class="btn btn-gold btn-block" type="submit">Send RSVP</button>
+          </form>
+
+          <div class="rsvp-done" data-rsvp-done hidden>
+            <div class="rsvp-done-icon" aria-hidden="true">♥</div>
+            <h3 data-rsvp-done-title>Thank you!</h3>
+            <p>Your email app should have opened with your answer. Remember to press <b>send</b> there too.</p>
+            <button class="btn btn-ghost" type="button" data-rsvp-reset>Edit my answer</button>
           </div>
         </div>
-      </article>
-      <article class="card" data-index="1" id="rsvp">
-        <div class="card-logo">G&amp;D</div>
-        <h2>RSVP</h2>
-        <div class="card-body">
-          <p>Share attendance details and confirm your spot.</p>
+      </div>
+    </section>
+
+    <!-- ============ FAQS ============ -->
+    <section class="section section-tint" id="faqs">
+      <div class="container container-narrow">
+        <div class="section-head reveal">
+          <p class="eyebrow"><span class="eyebrow-num">04</span>FAQs</p>
+          <h2>Good <em>questions</em></h2>
+          <p class="lead">If your question isn't answered here, just ask us.</p>
         </div>
-      </article>
-      <article class="card" data-index="2" id="faqs">
-        <div class="card-logo">G&amp;D</div>
-        <h2>FAQs</h2>
-        <div class="card-body">
-          <p>Common questions answered in one place.</p>
+
+        <div class="faq-list" data-faq>
+          <div class="faq-item reveal">
+            <button class="faq-q" type="button" aria-expanded="false">
+              <span>How do I get there?</span><span class="faq-icon" aria-hidden="true"></span>
+            </button>
+            <div class="faq-a"><div><p>The nearest airport is Klagenfurt. Ljubljana, Salzburg and Venice are also within driving distance. We'll share more travel tips here soon.</p></div></div>
+          </div>
+          <div class="faq-item reveal">
+            <button class="faq-q" type="button" aria-expanded="false">
+              <span>Where should I stay?</span><span class="faq-icon" aria-hidden="true"></span>
+            </button>
+            <div class="faq-a"><div><p>We're putting together a list of places to stay near Faaker See. Check back here soon.</p></div></div>
+          </div>
+          <div class="faq-item reveal">
+            <button class="faq-q" type="button" aria-expanded="false">
+              <span>What should I wear?</span><span class="faq-icon" aria-hidden="true"></span>
+            </button>
+            <div class="faq-a"><div><p>The dress code will be announced soon.</p></div></div>
+          </div>
+          <div class="faq-item reveal">
+            <button class="faq-q" type="button" aria-expanded="false">
+              <span>Can I bring a plus-one or children?</span><span class="faq-icon" aria-hidden="true"></span>
+            </button>
+            <div class="faq-a"><div><p>Please check your invitation. It lists everyone who is invited. If you're unsure, just ask us.</p></div></div>
+          </div>
+          <div class="faq-item reveal">
+            <button class="faq-q" type="button" aria-expanded="false">
+              <span>When do I need to RSVP by?</span><span class="faq-icon" aria-hidden="true"></span>
+            </button>
+            <div class="faq-a"><div><p>As soon as you can. The deadline will be posted here.</p></div></div>
+          </div>
         </div>
-      </article>
-      <article class="card" data-index="3" id="contact">
-        <div class="card-logo">G&amp;D</div>
-        <h2>Contact Us</h2>
-        <div class="card-body">
-          <p>Reach out for support or special requests.</p>
-          <form class="contact-form" action="mailto:schoellenberger@me.com" method="post" enctype="text/plain">
-            <button class="contact-button" type="submit">Email us</button>
-          </form>
+      </div>
+    </section>
+
+    <!-- ============ CONTACT ============ -->
+    <section class="section" id="contact">
+      <div class="container container-narrow">
+        <div class="contact-card reveal">
+          <p class="eyebrow"><span class="eyebrow-num">05</span>Contact</p>
+          <h2>Questions? <em>Say hello.</em></h2>
+          <p class="lead">If you need help or have a special request, write to us any time.</p>
+          <div class="contact-actions">
+            <a class="btn btn-gold" href="mailto:schoellenberger@me.com">Email us</a>
+            <button class="btn btn-glass" type="button" data-copy="schoellenberger@me.com">Copy email address</button>
+          </div>
         </div>
-      </article>
-      <article class="card" data-index="4" id="schedule">
-        <div class="card-logo">G&amp;D</div>
-        <h2>Schedule</h2>
-        <div class="card-body">
-          <p>Timeline of activities and key moments.</p>
-        </div>
-      </article>
-    </div>
+      </div>
+    </section>
   </main>
+
+  <footer class="footer">
+    <p class="footer-brand">G<em>&amp;</em>D</p>
+    <p>Made with love · <a href="#top">Back to top ↑</a></p>
+  </footer>
+
+  <div class="toast" role="status" aria-live="polite" data-toast></div>
+  <canvas class="confetti" aria-hidden="true" data-confetti></canvas>
+
   <script src="script.js"></script>
 </body>
 </html>
